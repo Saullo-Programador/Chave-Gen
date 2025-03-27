@@ -58,7 +58,7 @@
                         NavHost(
                             navController = navController,
                             route = AppGraph.initial.ROOT,
-                            startDestination = if (appState.user != null) AppGraph.main.ROOT else AppGraph.auth.ROOT
+                            startDestination = if (appState.user != null) AppGraph.home.ROOT else AppGraph.auth.ROOT
                         ) {
                             splashScreen()
                             authGraph(

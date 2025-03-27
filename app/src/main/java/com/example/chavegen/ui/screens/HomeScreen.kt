@@ -1,12 +1,10 @@
 package com.example.chavegen.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -16,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.chavegen.ui.components.BottomBar
 import com.example.chavegen.ui.viewModel.HomeViewModel
@@ -24,13 +21,13 @@ import com.example.chavegen.ui.viewModel.HomeViewModel
 @Composable
 fun HomeScreen(
     onSignOut: () -> Unit,
-    navController: NavHostController,  // Passa o NavController como parâmetro
+    navController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val userName by viewModel.userName.collectAsState()
     Scaffold(
         bottomBar = {
-            BottomBar(navController = navController)  // Passa o navController diretamente
+            BottomBar(navController = navController)
         }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {

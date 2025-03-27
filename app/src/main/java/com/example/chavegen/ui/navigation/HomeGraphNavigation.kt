@@ -18,7 +18,7 @@ fun NavGraphBuilder.homeGraph(
 ) {
 
     navigation(
-        route = AppGraph.main.ROOT,
+        route = AppGraph.home.ROOT,
         startDestination = BottomBarScreen.Home.route
     ) {
         composable(route = BottomBarScreen.Home.route) {
@@ -49,5 +49,5 @@ fun NavGraphBuilder.homeGraph(
             }
         }
     ) {
-        navigate(AppGraph.main.ROOT, navOptions)
+        navigate(AppGraph.home.ROOT, navOptions)
     }

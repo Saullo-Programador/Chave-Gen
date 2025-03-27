@@ -7,9 +7,11 @@ object AuthGraph {
     const val SIGN_UP = "sign_up"
 }
 
-object MainGraph {
-    const val ROOT = "main_graph"
-    const val MAIN = "main"
+object HomeGraph {
+    const val ROOT = "home_graph"
+    const val HOME = "home"
+    const val CADASTRO = "cadastro"
+    const val SETTINGS = "settings"
 }
 
 object SplashGraph {
@@ -23,6 +25,6 @@ object RootGraph {
 object AppGraph {
     val splash = SplashGraph
     val auth = AuthGraph
-    val main = MainGraph
+    val home = HomeGraph
     val initial = RootGraph
 }

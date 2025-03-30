@@ -20,9 +20,9 @@ sealed class BottomBarScreen(
         iconFocused = Icons.Filled.Home
     )
 
-    object Cadastrar : BottomBarScreen(
-        route = "cadastrar",
-        title = "Cadastrar",
+    object Register : BottomBarScreen(
+        route = "register",
+        title = "Register",
         icon = Icons.Default.Add,
         iconFocused = Icons.Filled.Add
     )

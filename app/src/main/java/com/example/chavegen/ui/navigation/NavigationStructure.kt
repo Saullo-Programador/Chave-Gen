@@ -10,7 +10,7 @@ object AuthGraph {
 object HomeGraph {
     const val ROOT = "home_graph"
     const val HOME = "home"
-    const val CADASTRO = "cadastro"
+    const val REGISTER = "register"
     const val SETTINGS = "settings"
 }
 

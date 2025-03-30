@@ -1,7 +1,6 @@
 package com.example.chavegen.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -10,13 +9,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun TopBarComponent(
     title: String,
     modifier: Modifier = Modifier,
-    leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = Color.White,
@@ -32,20 +33,29 @@ fun TopBarComponent(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        // Ícone da esquerda (se existir)
-        Box(modifier = Modifier.size(40.dp)) {
-            leadingIcon?.invoke()
-        }
-
         Text(
             text = title,
-            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            fontSize = 25.sp,
+            letterSpacing = 2.sp,
             color = contentColor,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).padding(start = 5.dp),
         )
 
         Box(modifier = Modifier.size(40.dp)) {
             trailingIcon?.invoke()
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TopBarPreview() {
+    TopBarComponent(
+        title = "Cadastro",
+
+        backgroundColor = MaterialTheme.colorScheme.primary,
+        contentColor = Color.White,
+        roundedCornerSize = 16
+    )
 }

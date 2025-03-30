@@ -23,7 +23,7 @@ import com.example.chavegen.ui.theme.Purple40
 fun BottomBar(navController: NavHostController) {
     val screens = listOf(
         BottomBarScreen.Home,
-        BottomBarScreen.Cadastrar,
+        BottomBarScreen.Register,
         BottomBarScreen.Settings
     )
 
@@ -32,10 +32,10 @@ fun BottomBar(navController: NavHostController) {
     Row(
         modifier = Modifier
             .navigationBarsPadding()
-            .padding(horizontal = 15.dp, vertical = 10.dp)
+            .padding(horizontal = 20.dp, vertical = 10.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(Color.White)
-            .height(50.dp)
+            .height(65.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
@@ -81,7 +81,8 @@ fun BottomBarItem(
                 imageVector = if (isSelected) screen.iconFocused else screen.icon,
                 contentDescription = "${screen.route} icon",
                 tint = contentColor,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier
+                    .size(70.dp)
             )
         }
 

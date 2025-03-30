@@ -16,14 +16,9 @@
     import androidx.hilt.navigation.compose.hiltViewModel
     import androidx.navigation.compose.NavHost
     import androidx.navigation.compose.rememberNavController
-    import com.example.chavegen.ui.navigation.AppGraph
-    import com.example.chavegen.ui.navigation.authGraph
-    import com.example.chavegen.ui.navigation.homeGraph
+    import com.example.chavegen.ui.navigation.RootNavigationGraph
     import com.example.chavegen.ui.navigation.navigateToAuthGraph
     import com.example.chavegen.ui.navigation.navigateToHomeGraph
-    import com.example.chavegen.ui.navigation.navigateToSignIn
-    import com.example.chavegen.ui.navigation.navigateToSignUp
-    import com.example.chavegen.ui.navigation.splashScreen
     import com.example.chavegen.ui.theme.ChaveGenTheme
     import com.example.chavegen.ui.viewModel.AppState
     import com.example.chavegen.ui.viewModel.AppViewModel
@@ -55,22 +50,7 @@
                                 navController.navigateToHomeGraph()
                             }?: navController.navigateToAuthGraph()
                         }
-                        NavHost(
-                            navController = navController,
-                            route = AppGraph.initial.ROOT,
-                            startDestination = if (appState.user != null) AppGraph.home.ROOT else AppGraph.auth.ROOT
-                        ) {
-                            splashScreen()
-                            authGraph(
-                                onNavigateToSignIn = {
-                                    navController.navigateToSignIn(it)
-                                },
-                                onNavigateToSignUp = {
-                                    navController.navigateToSignUp()
-                                }
-                            )
-                            homeGraph(navController = navController)
-                        }
+                        RootNavigationGraph(navController = navController)
                     }
                 }
             }

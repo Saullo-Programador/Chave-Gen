@@ -106,6 +106,95 @@ fun Item(
     }
 }
 
+@Composable
+fun SettingsItem(
+    text: String,
+    textButton: String? = null,
+    optionClickItem: Int = 1,
+    switchState: Boolean = false,
+    onItemClick: () -> Unit = {},
+    colorTextButton: Color = MaterialTheme.colorScheme.onBackground,
+    containerColorButton: Color = MaterialTheme.colorScheme.primary
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = text,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 19.sp,
+        )
+
+        when (optionClickItem) {
+            1 -> {
+                Switch(
+                    checked = switchState,
+                    onCheckedChange = { onItemClick() },
+                    colors = SwitchDefaults.colors(
+                        uncheckedBorderColor = Color.Transparent,
+
+                        checkedThumbColor = Color.White,
+                        checkedTrackColor = MaterialTheme.colorScheme.primary,
+                        checkedBorderColor = Color.Transparent
+
+                    )
+                )
+            }
+            2 -> {
+                var expanded by remember { mutableStateOf(false) }
+                Box {
+                    IconButton(onClick = { expanded = true }) {
+                        Icon(
+                            painter = painterResource(R.drawable.icon_more_horiz),
+                            contentDescription = "Menu Opções",
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Editar") },
+                            onClick = {
+                                expanded = false
+                                onItemClick()
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Excluir") },
+                            onClick = {
+                                expanded = false
+                                onItemClick()
+                            }
+                        )
+                    }
+                }
+            }
+            3 -> {
+                Button(
+                    onClick = onItemClick,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = containerColorButton
+                    )
+                ) {
+                    Text(
+                        text = textButton ?: "Clique aqui",
+                        color = colorTextButton,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 16.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ItemTaskPreview() {

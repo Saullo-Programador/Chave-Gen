@@ -2,48 +2,77 @@ package com.example.chavegen.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 @Composable
 fun TopBarComponent(
     title: String,
     modifier: Modifier = Modifier,
-    trailingIcon: (@Composable () -> Unit)? = null,
-    backgroundColor: Color = MaterialTheme.colorScheme.primary,
-    contentColor: Color = Color.White,
-    roundedCornerSize: Int = 26
+    navigationIcon: ImageVector? = null,
+    onNavigationClick: () -> Unit = {},
+    trailingIcon: ImageVector? = null,
+    onTrailingClick: () -> Unit = {},
+    contentColor: Color = MaterialTheme.colorScheme.onBackground,
 ) {
-    Row(
-        modifier = modifier
+    Box(
+        modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp)
-            .clip(RoundedCornerShape(bottomStart = roundedCornerSize.dp, bottomEnd = roundedCornerSize.dp))
-            .background(backgroundColor)
-            .padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+            .shadow(4.dp)
+            .background(MaterialTheme.colorScheme.background),
     ) {
-        Text(
-            text = title,
-            fontWeight = FontWeight.Bold,
-            fontSize = 25.sp,
-            letterSpacing = 2.sp,
-            color = contentColor,
-            modifier = Modifier.weight(1f).padding(start = 5.dp),
-        )
-
-        Box(modifier = Modifier.size(40.dp)) {
-            trailingIcon?.invoke()
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(65.dp)
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+                if (navigationIcon != null) {
+                    IconButton(onClick = { onNavigationClick() }) {
+                        Icon(
+                            imageVector = navigationIcon,
+                            contentDescription = null,
+                            tint = contentColor,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                }
+                Text(
+                    text = title,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    letterSpacing = 2.sp,
+                    color = contentColor,
+                )
+            }
+            if (trailingIcon != null) {
+                IconButton(onClick = { onTrailingClick() }) {
+                    Icon(
+                        imageVector = trailingIcon,
+                        contentDescription = null,
+                        tint = contentColor,
+                        modifier = Modifier.size(30.dp)
+                    )
+                }
+            }
         }
     }
 }
@@ -53,9 +82,7 @@ fun TopBarComponent(
 fun TopBarPreview() {
     TopBarComponent(
         title = "Cadastro",
-
-        backgroundColor = MaterialTheme.colorScheme.primary,
-        contentColor = Color.White,
-        roundedCornerSize = 16
+        trailingIcon = Icons.Default.Settings,
+        navigationIcon = Icons.AutoMirrored.Filled.ArrowBack,
     )
 }

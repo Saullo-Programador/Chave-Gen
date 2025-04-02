@@ -5,7 +5,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -15,7 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import com.example.chavegen.ui.screens.HomeScreen
-import com.example.chavegen.ui.screens.RegisterScreen
+import com.example.chavegen.ui.screens.RegisterMain
 import com.example.chavegen.ui.screens.SettingsScreen
 import com.example.chavegen.ui.screens.SignInScreen
 import com.example.chavegen.ui.screens.SignUpScreen
@@ -26,16 +25,17 @@ import com.example.chavegen.ui.viewModel.SignUpViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun RootNavigationGraph(navController: NavHostController) {
+fun RootNavigationGraph(
+    navController: NavHostController,
+    onThemeToggle: () -> Unit
+) {
     NavHost(
         navController = navController,
         route = AppGraph.initial.ROOT,
         startDestination = AppGraph.auth.ROOT
     ) {
         authNavGraph(navController = navController)
-        composable(route = AppGraph.home.ROOT) {
-            HomeViewContent()
-        }
+        homeNavGraph( navController = navController, onThemeToggle = onThemeToggle)
     }
 }
 
@@ -100,30 +100,49 @@ fun NavHostController.navigateToAuthGraph(
 }
 
 
-@Composable
-fun HomeNavGraph(
-    modifier: Modifier = Modifier,
-    navController: NavHostController
-) {
-    NavHost(
-        navController = navController,
+fun NavGraphBuilder.homeNavGraph(
+    navController: NavHostController,
+    onThemeToggle: () -> Unit
+){
+    navigation(
         route = AppGraph.home.ROOT,
         startDestination = AppGraph.home.HOME
     ) {
         composable(route = AppGraph.home.HOME) {
             val viewModel: HomeViewModel = hiltViewModel()
             HomeScreen(
-                onSignOut = { viewModel.signOut() },
-                viewModel = viewModel
+                viewModel = viewModel,
+                onAddClick = {
+                    navController.navigate(AppGraph.home.REGISTER)
+                }  ,
+                onSettingsClick = {
+                    navController.navigate(AppGraph.home.SETTINGS)
+                }
             )
         }
         composable(route = AppGraph.home.REGISTER) {
             val viewModel: RegisterViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
-            RegisterScreen(uiState = uiState, viewModel = viewModel)
+            RegisterMain(
+                uiState = uiState,
+                viewModel = viewModel,
+                onSaveSuccess = {
+                    navController.navigate(AppGraph.home.HOME)
+                },
+                onBackClick = {
+                    navController.navigate(AppGraph.home.HOME)
+                }
+            )
         }
         composable(route = AppGraph.home.SETTINGS) {
-            SettingsScreen()
+            val viewModel: HomeViewModel = hiltViewModel()
+            SettingsScreen(
+                onThemeToggle = onThemeToggle,
+                onSignOut = { viewModel.signOut() },
+                onBackClick = {
+                    navController.navigate(AppGraph.home.HOME)
+                }
+            )
         }
     }
 }

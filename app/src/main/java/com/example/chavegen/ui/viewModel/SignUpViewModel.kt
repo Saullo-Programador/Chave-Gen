@@ -20,6 +20,7 @@ class SignUpViewModel @Inject constructor(
 ): ViewModel(){
     private val _uiState = MutableStateFlow(SignUpUiState())
     val uiState = _uiState.asStateFlow()
+
     private val _signUpIsSuccessful = MutableSharedFlow<Boolean>()
     val signUpIsSuccessful = _signUpIsSuccessful.asSharedFlow()
 

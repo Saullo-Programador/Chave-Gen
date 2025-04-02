@@ -1,6 +1,5 @@
 package com.example.chavegen.authentication
 
-import com.example.chavegen.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -36,8 +35,16 @@ class FirebaseAuthRepository @Inject constructor(
     suspend fun signUp(email:String, password: String, userName: String){
         val result = firebaseAuth.createUserWithEmailAndPassword(email,password).await()
         result.user?.let{user->
-            val userData= hashMapOf("name" to userName, "email" to email)
-            firebaseFirestore.collection("users").document(user.uid).set(userData).await()
+            val userData= hashMapOf(
+                "name" to userName,
+                "email" to email,
+                "password" to password
+            )
+            firebaseFirestore
+                .collection("users")
+                .document(user.uid)
+                .set(userData)
+                .await()
         }
         firebaseAuth.signOut()
     }

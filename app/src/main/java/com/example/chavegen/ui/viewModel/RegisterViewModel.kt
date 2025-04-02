@@ -1,17 +1,21 @@
 package com.example.chavegen.ui.viewModel
 
 import androidx.lifecycle.ViewModel
+import com.example.chavegen.authentication.FirebaseAuthRepository
 import com.example.chavegen.generated.generatedPassword
+import com.example.chavegen.repository.FireStoreRepository
 import com.example.chavegen.ui.state.GeneratedPasswordUiState
 import com.example.chavegen.ui.state.RegisterUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-
+    private val fireStoreRepository: FireStoreRepository,
+    private val fireAuth: FirebaseAuthRepository
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(RegisterUiState())
@@ -23,23 +27,35 @@ class RegisterViewModel @Inject constructor(
     private val _generatedPassword = MutableStateFlow("")
     val generatedPassword = _generatedPassword.asStateFlow()
 
-    //Cadastro de login
-    fun onNameSiteChange(newValue: String) {
-        _uiState.value = _uiState.value.copy(nameSite = newValue)
-    }
+    private val _eventMessage = MutableStateFlow<String?>(null)
+    val eventMessage = _eventMessage.asStateFlow()
 
-    fun onUrlSiteChange(newValue: String) {
-        _uiState.value = _uiState.value.copy(urlSite = newValue)
+    init {
+        _uiState.update { currentState ->
+            currentState.copy(
+                onSiteNameChange = { siteName ->
+                    _uiState.update {
+                        it.copy(siteName = siteName)
+                    }
+                },
+                onSiteUrlChange = { siteUrl ->
+                    _uiState.update {
+                        it.copy(siteUrl = siteUrl)
+                    }
+                },
+                onSiteUserChange = { siteUser ->
+                    _uiState.update {
+                        it.copy(siteUser = siteUser)
+                    }
+                },
+                onSitePasswordChange = { sitePassword ->
+                    _uiState.update {
+                        it.copy(sitePassword = sitePassword)
+                    }
+                }
+            )
+        }
     }
-
-    fun onLoginSiteChange(newValue: String) {
-        _uiState.value = _uiState.value.copy(loginSite = newValue)
-    }
-
-    fun onPasswordSiteChange(newValue: String) {
-        _uiState.value = _uiState.value.copy(passwordSite = newValue)
-    }
-
 
     //Gerar senha
     fun onPasswordOptionsChange(newState: GeneratedPasswordUiState) {
@@ -51,5 +67,27 @@ class RegisterViewModel @Inject constructor(
         _generatedPassword.value = generatedPassword(uiState)
     }
 
-
+    //salvar login
+    fun verificarLogin(): Boolean {
+        val userId = fireAuth.getCurrentUserId()
+        return if (
+            _uiState.value.siteName.isNotEmpty() &&
+            _uiState.value.siteUrl.isNotEmpty() &&
+            _uiState.value.siteUser.isNotEmpty() &&
+            _uiState.value.sitePassword.isNotEmpty()
+        ) {
+            fireStoreRepository.salvarLogin(
+                userId = userId ?: return false,
+                siteName = _uiState.value.siteName,
+                siteUrl = _uiState.value.siteUrl,
+                siteUser = _uiState.value.siteUser,
+                sitePassword = _uiState.value.sitePassword
+            )
+            _eventMessage.value = "Sucesso ao salvar o login"
+            true
+        } else {
+            _eventMessage.value = "Preencha os campos de Nome do Site, Login e Senha"
+            false
+        }
+    }
 }

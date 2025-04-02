@@ -27,14 +27,16 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun CustomButton(
-    text: String,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    text: String,
+    fontSize: Int = 16,
+    onClick: () -> Unit,
     enabled: Boolean = true,
     isLoading: Boolean = false,
     icon: ImageVector? = null,
     iconPosition: ButtonIconPosition = ButtonIconPosition.START,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
+    fontColor: Color = Color.White,
     cornerRadius: Int = 12
 ) {
     Button(
@@ -57,11 +59,12 @@ fun CustomButton(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
+                    tint = fontColor,
                     modifier = Modifier.padding(end = 8.dp)
                 )
             }
 
-            Text(text, fontSize = 16.sp)
+            Text(text, fontSize = fontSize.sp, color = fontColor)
 
             if (icon != null && iconPosition == ButtonIconPosition.END) {
                 Icon(
@@ -87,7 +90,7 @@ fun CustomButtonPreview() {
             text = "Confirmar",
             onClick = { /* TODO */ },
             icon = Icons.Default.Check,
-            cornerRadius = 8
+            cornerRadius = 8,
         )
 
         CustomButton(

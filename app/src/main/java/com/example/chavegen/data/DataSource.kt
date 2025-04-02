@@ -6,22 +6,25 @@ import com.google.firebase.firestore.FirebaseFirestore
 class DataSource(
     private val fireStore: FirebaseFirestore
 ){
-    fun salvarLogin(siteName: String, url: String, email: String, password: String){
+    fun salvarLogin(userId: String, siteName: String, siteUrl: String, siteUser: String, sitePassword: String){
 
         val loginMap = hashMapOf(
             "siteName" to siteName,
-            "url" to url,
-            "email" to email,
-            "password" to password
+            "siteUrl" to siteUrl,
+            "siteUser" to siteUser,
+            "sitePassword" to sitePassword
         )
 
         fireStore
+            .collection("users")
+            .document(userId)
             .collection("logins")
             .document(siteName)
             .set(loginMap)
-            .addOnCompleteListener { i->
-                Log.i("DataSource", "Item login salvo com sucesso")
-            }.addOnFailureListener { e->
+            .addOnCompleteListener {
+                Log.i("DataSource", "Item login salvo com sucesso para o usuário $userId")
+            }
+            .addOnFailureListener { e ->
                 Log.e("DataSource", "Erro ao salvar Item login: $e")
             }
     }

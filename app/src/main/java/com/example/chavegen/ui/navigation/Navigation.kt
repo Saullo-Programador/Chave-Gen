@@ -20,6 +20,7 @@ import com.example.chavegen.ui.screens.SignInScreen
 import com.example.chavegen.ui.screens.SignUpScreen
 import com.example.chavegen.ui.viewModel.HomeViewModel
 import com.example.chavegen.ui.viewModel.RegisterViewModel
+import com.example.chavegen.ui.viewModel.SettingsViewModel
 import com.example.chavegen.ui.viewModel.SignInViewModel
 import com.example.chavegen.ui.viewModel.SignUpViewModel
 import kotlinx.coroutines.launch
@@ -135,7 +136,7 @@ fun NavGraphBuilder.homeNavGraph(
             )
         }
         composable(route = AppGraph.home.SETTINGS) {
-            val viewModel: HomeViewModel = hiltViewModel()
+            val viewModel: SettingsViewModel = hiltViewModel()
             SettingsScreen(
                 onThemeToggle = onThemeToggle,
                 onSignOut = { viewModel.signOut() },

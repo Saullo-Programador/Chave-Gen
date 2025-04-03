@@ -17,23 +17,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 @Composable
-fun Item(
+fun ItemLogin(
     modifier: Modifier = Modifier,
     taskName: String,
     taskDescription: String = "",
     onDeleteTask: () -> Unit = {},
     onEditTask: () -> Unit = {},
-    viewItem: () -> Unit = {}
+    viewLoginItem: () -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     Card(
         modifier = modifier
+            .padding(vertical = 5.dp)
             .fillMaxWidth()
-            .clickable(onClick = viewItem),
+            .clickable(onClick = viewLoginItem),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp
+        ),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
     ) {
         Row(
             modifier = Modifier
@@ -203,7 +206,7 @@ fun ItemTaskPreview() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Item(
+        ItemLogin(
             taskName = "Nome da Tarefa",
             taskDescription = "Descrição da tarefa",
             onDeleteTask = {},

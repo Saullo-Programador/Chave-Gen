@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,18 +18,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.chavegen.ui.components.SettingsItem
 import com.example.chavegen.ui.components.TopBarComponent
+import com.example.chavegen.ui.viewModel.SettingsViewModel
 
 @Composable
 fun SettingsScreen(
+    viewModel: SettingsViewModel = hiltViewModel(),
     onThemeToggle: () -> Unit,
     onSignOut: () -> Unit = {},
     onBackClick: () -> Unit = {}
 ) {
-
+    val userName by viewModel.userName.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -40,7 +47,8 @@ fun SettingsScreen(
         )
         SettingsContent(
             onThemeToggle = onThemeToggle,
-            onSignOut = onSignOut
+            onSignOut = onSignOut,
+            userName = userName
         )
     }
 }
@@ -48,7 +56,8 @@ fun SettingsScreen(
 @Composable
 fun SettingsContent(
     onThemeToggle: () -> Unit,
-    onSignOut: () -> Unit = {}
+    onSignOut: () -> Unit = {},
+    userName: String?
 ) {
     var switchState by remember { mutableStateOf(false) }
 
@@ -59,6 +68,11 @@ fun SettingsContent(
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            text = "Bem-vindo ${userName ?: "Carregando..."}",
+            fontSize = 19.sp,
+            fontWeight = FontWeight.Bold
+        )
         SettingsItem(
             text = "Dark Mode",
             optionClickItem = 1,

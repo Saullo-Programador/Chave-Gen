@@ -9,15 +9,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navOptions
 import androidx.navigation.navigation
+import com.example.chavegen.ui.screens.EditLoginScreen
 import com.example.chavegen.ui.screens.HomeScreen
 import com.example.chavegen.ui.screens.RegisterMain
 import com.example.chavegen.ui.screens.SettingsScreen
 import com.example.chavegen.ui.screens.SignInScreen
 import com.example.chavegen.ui.screens.SignUpScreen
+import com.example.chavegen.ui.viewModel.EditLoginViewModel
 import com.example.chavegen.ui.viewModel.HomeViewModel
 import com.example.chavegen.ui.viewModel.RegisterViewModel
 import com.example.chavegen.ui.viewModel.SettingsViewModel
@@ -118,6 +122,9 @@ fun NavGraphBuilder.homeNavGraph(
                 }  ,
                 onSettingsClick = {
                     navController.navigate(AppGraph.home.SETTINGS)
+                },
+                onEditItem = { documentId ->
+                    navController.navigate("${AppGraph.home.EDIT_LOGIN_BASE}/$documentId")
                 }
             )
         }
@@ -143,6 +150,29 @@ fun NavGraphBuilder.homeNavGraph(
                 onBackClick = {
                     navController.navigate(AppGraph.home.HOME)
                 }
+            )
+        }
+        composable(
+            route = AppGraph.home.EDIT_LOGIN,
+            arguments = listOf(navArgument("documentId") {
+                type = NavType.StringType
+                defaultValue = ""
+            })
+        ) { backStackEntry ->
+            val viewModel: EditLoginViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsState()
+            val documentId = backStackEntry.arguments?.getString("documentId") ?: ""
+
+            LaunchedEffect(documentId) {
+                viewModel.loadLoginFromFirestore(documentId)
+            }
+
+            EditLoginScreen(
+                viewModel = viewModel,
+                onNavigateBack = {
+                    navController.popBackStack()
+                },
+                state = uiState
             )
         }
     }

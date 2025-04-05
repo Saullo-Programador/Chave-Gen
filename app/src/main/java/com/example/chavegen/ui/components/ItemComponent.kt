@@ -4,6 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Delete
 import com.example.chavegen.R
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -90,14 +93,38 @@ fun ItemLogin(
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     DropdownMenuItem(
-                        text = { Text("Editar") },
+                        text = {
+                            Text(
+                                text = "Editar",
+                                fontSize = 17.sp
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Create,
+                                contentDescription = "Editar",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        },
                         onClick = {
                             expanded = false
                             onEditTask()
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text("Excluir") },
+                        text = {
+                            Text(
+                                text = "Excluir",
+                                fontSize = 17.sp
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Excluir",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        },
                         onClick = {
                             expanded = false
                             onDeleteTask()

@@ -29,17 +29,37 @@ class HomeViewModel @Inject constructor(
             firebaseAuthRepository.getCurrentUserId()?.let { userId ->
                 buscarLogins(userId)
             } ?: run {
-                _isLoading.value = false  // Se não houver usuário, define como carregamento concluído
+                _isLoading.value = false
             }
         }
     }
 
     fun buscarLogins(userId: String) {
+        _isLoading.value = true
         viewModelScope.launch {
-            _isLoading.value = true  // Começa o carregamento
             fireStoreRepository.getLogins(userId).collectLatest { lista ->
                 _logins.value = lista
-                _isLoading.value = false  // Finaliza o carregamento após obter os dados
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun deletarLogin(documentId: String) {
+        viewModelScope.launch {
+            firebaseAuthRepository.getCurrentUserId()?.let { userId ->
+                fireStoreRepository.deletarLogin(userId, documentId)
+                _logins.value = _logins.value.filter { it.documentId != documentId }
+            }
+        }
+    }
+
+    fun editarLogin(item: ItemLogin) {
+        viewModelScope.launch {
+            firebaseAuthRepository.getCurrentUserId()?.let { userId ->
+                fireStoreRepository.editarLogin(userId, item)
+                _logins.value = _logins.value.map {
+                    if (it.documentId == item.documentId) item else it
+                }
             }
         }
     }

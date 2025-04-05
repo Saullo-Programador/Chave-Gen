@@ -76,12 +76,15 @@ class RegisterViewModel @Inject constructor(
             _uiState.value.siteUser.isNotEmpty() &&
             _uiState.value.sitePassword.isNotEmpty()
         ) {
-            fireStoreRepository.salvarLogin(
-                userId = userId ?: return false,
+            val itemLogin = com.example.chavegen.models.ItemLogin(
                 siteName = _uiState.value.siteName,
                 siteUrl = _uiState.value.siteUrl,
                 siteUser = _uiState.value.siteUser,
                 sitePassword = _uiState.value.sitePassword
+            )
+            fireStoreRepository.salvarLogin(
+                userId = userId ?: return false,
+                itemLogin = itemLogin
             )
             _eventMessage.value = "Sucesso ao salvar o login"
             true

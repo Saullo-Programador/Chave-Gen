@@ -13,11 +13,25 @@ class FireStoreRepository @Inject constructor(
     private val dataSource = DataSource(
         fireStore = fireStore
     )
-    fun salvarLogin(userId: String, siteName: String, siteUrl: String, siteUser: String, sitePassword: String) {
-        dataSource.salvarLogin(userId, siteName, siteUrl, siteUser, sitePassword)
+
+    fun salvarLogin(userId: String, itemLogin: ItemLogin) {
+        dataSource.salvarLogin(userId, itemLogin )
     }
 
     fun getLogins(userId: String): Flow<MutableList<ItemLogin>> {
         return dataSource.getLogins(userId)
     }
+
+    fun deletarLogin(userId: String, documentId: String) {
+        dataSource.deletarLogin(userId, documentId)
+    }
+
+    fun editarLogin(userId: String, itemLogin: ItemLogin) {
+        dataSource.editarLogin(userId, itemLogin)
+    }
+
+    fun getLoginById(userId: String, documentId: String, callback: (ItemLogin?) -> Unit) {
+        dataSource.getLoginById(userId, documentId, callback)
+    }
+
 }

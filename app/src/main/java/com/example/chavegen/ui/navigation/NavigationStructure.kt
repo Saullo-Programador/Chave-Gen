@@ -12,6 +12,8 @@ object HomeGraph {
     const val HOME = "home"
     const val REGISTER = "register"
     const val SETTINGS = "settings"
+    const val EDIT_LOGIN_BASE = "edit_login"
+    const val EDIT_LOGIN = "$EDIT_LOGIN_BASE/{documentId}"
 }
 
 object SplashGraph {

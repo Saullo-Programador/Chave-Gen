@@ -31,16 +31,14 @@ fun HomeScreen(
     onAddClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
     onViewLoginItem: () -> Unit = {},
-    onEditTask: () -> Unit = {},
-    onDeleteTask: () -> Unit = {}
+    onEditItem: (String) -> Unit,
 ) {
     HomeView(
         onAddClick = onAddClick,
         onSettingsClick = onSettingsClick,
         viewModel = viewModel,
         onViewLoginItem = onViewLoginItem,
-        onEditTask = onEditTask,
-        onDeleteTask = onDeleteTask
+        onEditItem = onEditItem,
     )
 }
 
@@ -50,8 +48,7 @@ fun HomeView(
     onSettingsClick: () -> Unit = {},
     viewModel: HomeViewModel,
     onViewLoginItem: () -> Unit = {},
-    onEditTask: () -> Unit = {},
-    onDeleteTask: () -> Unit = {}
+    onEditItem: (String) -> Unit,
 ){
     Scaffold(
         containerColor = MaterialTheme. colorScheme.surface,
@@ -77,8 +74,7 @@ fun HomeView(
             HomeContent(
                 viewModel = viewModel,
                 onViewLoginItem = onViewLoginItem,
-                onEditTask = onEditTask,
-                onDeleteTask = onDeleteTask
+                onEditItem = onEditItem,
             )
         }
     }
@@ -88,8 +84,7 @@ fun HomeView(
 fun HomeContent(
     viewModel: HomeViewModel,
     onViewLoginItem: () -> Unit = {},
-    onEditTask: () -> Unit = {},
-    onDeleteTask: () -> Unit = {}
+    onEditItem: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -100,9 +95,8 @@ fun HomeContent(
     ) {
         HomeList(
             viewModel = viewModel,
-            onViewLoginItem = {onViewLoginItem},
-            onEditTask = {onEditTask},
-            onDeleteTask = {onDeleteTask}
+            onViewLoginItem = onViewLoginItem,
+            onEditItem = onEditItem,
         )
     }
 }
@@ -112,8 +106,7 @@ fun HomeContent(
 fun HomeList(
     viewModel: HomeViewModel,
     onViewLoginItem: () -> Unit = {},
-    onEditTask: () -> Unit = {},
-    onDeleteTask: () -> Unit = {}
+    onEditItem: (String) -> Unit = {},
 
 ) {
     val logins by viewModel.logins.collectAsState()
@@ -138,8 +131,13 @@ fun HomeList(
                     ItemLogin(
                         taskName = login.siteName ?: "",
                         taskDescription = login.siteUrl ?: "",
-                        onDeleteTask = onDeleteTask,
-                        onEditTask = onEditTask,
+                        onDeleteTask = {
+                            viewModel.deletarLogin(login.documentId)
+                        },
+                        onEditTask = {
+                            viewModel.editarLogin(login)
+                            onEditItem(login.documentId)
+                        },
                         viewLoginItem = onViewLoginItem
                     )
                 }
@@ -147,4 +145,5 @@ fun HomeList(
         }
     }
 }
+
 

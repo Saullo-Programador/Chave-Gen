@@ -73,6 +73,7 @@ fun CustomTextField(
         singleLine = true,
         shape = shape,
         colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent

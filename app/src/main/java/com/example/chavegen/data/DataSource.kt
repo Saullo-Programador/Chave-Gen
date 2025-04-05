@@ -11,30 +11,17 @@ class DataSource(
 ) {
 
 
-    //private val _todosLogins = MutableStateFlow<MutableList<ItemLogin>>(mutableListOf())
-    //private val todosLogins: StateFlow<MutableList<ItemLogin>> = _todosLogins
-
     fun salvarLogin(
         userId: String,
-        siteName: String,
-        siteUrl: String,
-        siteUser: String,
-        sitePassword: String
+        itemLogin: ItemLogin
     ) {
-
-        val loginMap = hashMapOf(
-            "siteName" to siteName,
-            "siteUrl" to siteUrl,
-            "siteUser" to siteUser,
-            "sitePassword" to sitePassword
-        )
 
         fireStore
             .collection("users")
             .document(userId)
             .collection("logins")
-            .document(siteName)
-            .set(loginMap)
+            .document(itemLogin.documentId)
+            .set(itemLogin)
             .addOnCompleteListener {
                 Log.i("DataSource", "Item login salvo com sucesso para o usuário $userId")
             }
@@ -43,7 +30,9 @@ class DataSource(
             }
     }
 
-    fun getLogins(userId: String): Flow<MutableList<ItemLogin>> {
+    fun getLogins(
+        userId: String
+    ): Flow<MutableList<ItemLogin>> {
 
         val loginsFlow = MutableStateFlow<MutableList<ItemLogin>>(mutableListOf())
 
@@ -63,5 +52,62 @@ class DataSource(
             }
         return loginsFlow
     }
+
+    fun deletarLogin(
+        userId: String,
+        documentId: String
+    ) {
+        fireStore
+            .collection("users")
+            .document(userId)
+            .collection("logins")
+            .document(documentId)
+            .delete()
+            .addOnSuccessListener {
+                Log.i("DataSource", "Login deletado com sucesso para o usuário $userId")
+            }
+            .addOnFailureListener { e ->
+                Log.e("DataSource", "Erro ao deletar login: $e")
+            }
+    }
+
+    fun editarLogin(
+        userId: String,
+        itemLogin: ItemLogin
+    ) {
+        fireStore
+            .collection("users")
+            .document(userId)
+            .collection("logins")
+            .document(itemLogin.documentId)
+            .update(mapOf(
+                "siteName" to itemLogin.siteName,
+                "siteUrl" to itemLogin.siteUrl,
+                "siteUser" to itemLogin.siteUser,
+                "sitePassword" to itemLogin.sitePassword
+            ))
+            .addOnCompleteListener {
+                Log.i("DataSource", "Item login editado com sucesso para o usuário $userId")
+            }
+            .addOnFailureListener { e ->
+                Log.e("DataSource", "Erro ao editar Item login: $e")
+            }
+    }
+
+    fun getLoginById(userId: String, documentId: String, callback: (ItemLogin?) -> Unit) {
+        fireStore.collection("users")
+            .document(userId)
+            .collection("logins")
+            .document(documentId)
+            .get()
+            .addOnSuccessListener { document ->
+                val item = document.toObject(ItemLogin::class.java)
+                callback(item)
+            }
+            .addOnFailureListener {
+                callback(null)
+            }
+    }
+
 
 }

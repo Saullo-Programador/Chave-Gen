@@ -12,6 +12,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import androidx.navigation.navOptions
 import androidx.navigation.navigation
@@ -21,6 +22,7 @@ import com.example.chavegen.ui.screens.RegisterMain
 import com.example.chavegen.ui.screens.SettingsScreen
 import com.example.chavegen.ui.screens.SignInScreen
 import com.example.chavegen.ui.screens.SignUpScreen
+import com.example.chavegen.ui.screens.SplashScreen
 import com.example.chavegen.ui.viewModel.EditLoginViewModel
 import com.example.chavegen.ui.viewModel.HomeViewModel
 import com.example.chavegen.ui.viewModel.RegisterViewModel
@@ -37,12 +39,27 @@ fun RootNavigationGraph(
     NavHost(
         navController = navController,
         route = AppGraph.initial.ROOT,
-        startDestination = AppGraph.auth.ROOT
+        startDestination = AppGraph.initial.SPLASH
     ) {
+        composable(route = AppGraph.initial.SPLASH) {
+            SplashScreen(
+                onNavigateToHome = {
+                    navController.navigate(AppGraph.home.ROOT) {
+                        popUpTo(AppGraph.initial.SPLASH) { inclusive = true }
+                    }
+                },
+                onNavigateToAuth = {
+                    navController.navigate(AppGraph.auth.ROOT) {
+                        popUpTo(AppGraph.initial.SPLASH) { inclusive = true }
+                    }
+                }
+            )
+        }
         authNavGraph(navController = navController)
         homeNavGraph( navController = navController, onThemeToggle = onThemeToggle)
     }
 }
+
 
 fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
     navigation(

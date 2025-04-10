@@ -35,7 +35,7 @@
             super.onCreate(savedInstanceState)
             enableEdgeToEdge()
             setContent {
-                var isSystemTheme by rememberSaveable { mutableStateOf(false) }
+                var isSystemTheme by rememberSaveable { mutableStateOf(true) }
                 ChaveGenTheme(
                     dynamicColor = false,
                     darkTheme = isSystemTheme
@@ -54,18 +54,8 @@
                             .fillMaxSize()
                     ) {
                         val navController = rememberNavController()
-                        val appViewModel: AppViewModel = hiltViewModel()
-                        val appState by appViewModel.state
-                            .collectAsState(initial = AppState())
 
-                        LaunchedEffect(appState) {
-                            if(appState.isInitLoading){
-                                return@LaunchedEffect
-                            }
-                            appState.user?.let {
-                                navController.navigateToHomeGraph()
-                            }?: navController.navigateToAuthGraph()
-                        }
+
                         RootNavigationGraph(
                             navController = navController,
                             onThemeToggle ={

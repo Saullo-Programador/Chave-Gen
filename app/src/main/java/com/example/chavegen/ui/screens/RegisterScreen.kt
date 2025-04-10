@@ -97,7 +97,7 @@ fun RegisterScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
+            .background(MaterialTheme.colorScheme.background)
             .windowInsetsPadding(insets = WindowInsets.systemBars),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

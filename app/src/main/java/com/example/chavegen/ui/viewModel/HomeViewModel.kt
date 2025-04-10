@@ -39,10 +39,12 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             fireStoreRepository.getLogins(userId).collectLatest { lista ->
                 _logins.value = lista
+                kotlinx.coroutines.delay(200)
                 _isLoading.value = false
             }
         }
     }
+
 
     fun deletarLogin(documentId: String) {
         viewModelScope.launch {

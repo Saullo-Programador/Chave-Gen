@@ -38,7 +38,7 @@ fun SettingsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         TopBarComponent(
             title = "Settings",
@@ -65,13 +65,19 @@ fun SettingsContent(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Bem-vindo ${userName ?: "Carregando..."}",
+            text = " ${userName ?: "Carregando..."}",
             fontSize = 19.sp,
             fontWeight = FontWeight.Bold
+        )
+        SettingsItem(
+            text = "Usuario",
+            itemText = " ${userName ?: "Carregando..."}",
+            optionClickItem = 5,
+            onItemClick = {}
         )
         SettingsItem(
             text = "Dark Mode",
@@ -84,9 +90,9 @@ fun SettingsContent(
         )
         SettingsItem(
             text = "Sair da conta",
-            optionClickItem = 3,
-            textButton = "Sair",
-            colorTextButton = Color.White,
+            optionClickItem = 4,
+            itemText = "Sair",
+            colorTextButton = Color.Red,
             onItemClick = {
                 onSignOut()
             }

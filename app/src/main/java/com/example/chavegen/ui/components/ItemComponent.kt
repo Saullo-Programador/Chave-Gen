@@ -39,7 +39,7 @@ fun ItemLogin(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
         ),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Row(
             modifier = Modifier
@@ -139,6 +139,7 @@ fun ItemLogin(
 @Composable
 fun SettingsItem(
     text: String,
+    itemText: String? = null,
     textButton: String? = null,
     optionClickItem: Int = 1,
     switchState: Boolean = false,
@@ -220,6 +221,22 @@ fun SettingsItem(
                         fontSize = 16.sp
                     )
                 }
+            }
+            4 -> {
+                Text(
+                    text = itemText ?: "Clique aqui",
+                    color = colorTextButton,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 19.sp,
+                    modifier = Modifier.clickable { onItemClick() }
+                )
+            }
+            5 -> {
+                Text(
+                    text = itemText ?: "Carregando...",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 19.sp,
+                )
             }
         }
     }

@@ -16,16 +16,12 @@ object HomeGraph {
     const val EDIT_LOGIN = "$EDIT_LOGIN_BASE/{documentId}"
 }
 
-object SplashGraph {
+object RootGraph {
+    const val ROOT = "root_graph"
     const val SPLASH = "splash"
 }
 
-object RootGraph {
-    const val ROOT = "root_graph"
-}
-
 object AppGraph {
-    val splash = SplashGraph
     val auth = AuthGraph
     val home = HomeGraph
     val initial = RootGraph

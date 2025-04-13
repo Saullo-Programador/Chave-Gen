@@ -1,14 +1,17 @@
 package com.example.chavegen.ui.screens
 
-
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -18,16 +21,19 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.chavegen.R
 import com.example.chavegen.ui.components.CustomButton
 import com.example.chavegen.ui.components.CustomTextField
+import com.example.chavegen.ui.components.ErrorMessage
 import com.example.chavegen.ui.state.SignUpUiState
 
 @Composable
@@ -73,32 +79,16 @@ fun SignUpContent(
             .background(MaterialTheme.colorScheme.background)
             .verticalScroll(rememberScrollState())
     ) {
-        AnimatedVisibility(visible = uiState !=  null) {
-            uiState?.let{
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.Red)
-                ) {
-                    Text(
-                        text = it,
-                        Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        }
+        ErrorMessage(message = uiState)
         Column(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .padding(23.dp),
+                .padding(horizontal = 23.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            SignUpTop()
             SignUpForm(
                 user = user,
                 userOnValue = userOnValue,
@@ -110,6 +100,43 @@ fun SignUpContent(
                 confirmPasswordOnValue = confirmPasswordOnValue,
                 startOnClick = startOnClick,
                 onSignInClick = onSignInClick
+            )
+        }
+    }
+}
+
+@Composable
+fun SignUpTop(){
+    Row (
+        modifier = Modifier
+            .padding(bottom = 10.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ){
+        Image(
+            painter = painterResource(id = R.drawable.logo1),
+            contentDescription = "Logo",
+            modifier = Modifier.size(140.dp)
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(7.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.app_name),
+                fontSize = 50.sp,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier
+            )
+            Text(
+                text = stringResource(id = R.string.menssage_sign_up),
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier
             )
         }
     }
@@ -133,7 +160,7 @@ fun SignUpForm(
         modifier = modifier
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ){
         CustomTextField(
             value = user,
@@ -168,19 +195,70 @@ fun SignUpForm(
             placeholder = "Digite sua Senha"
         )
         CustomButton(
-            text = "Entrar",
+            text = "Cadastrar",
             onClick = startOnClick,
             cornerRadius = 8,
             modifier = Modifier.padding(top = 5.dp)
         )
-        TextButton(
-            onClick = onSignInClick,
-            Modifier
-                .fillMaxWidth(0.8f)
-                .padding(8.dp)
+        SignUpBottom (
+            onSignInClick = onSignInClick
+        )
+    }
+}
+
+
+@Composable
+fun SignUpBottom(
+    onSignInClick: () -> Unit
+){
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = "Logar")
+            Spacer(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(1.dp)
+                    .padding(horizontal = 6.dp)
+                    .background(MaterialTheme.colorScheme.onBackground)
+            )
+            Text(
+                text = "Ou",
+                modifier = Modifier
+                    .padding(10.dp)
+            )
+            Spacer(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(1.dp)
+                    .padding(horizontal = 6.dp)
+                    .background(MaterialTheme.colorScheme.onBackground)
+            )
         }
+        Row (
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ){
+            Text(
+                text = "Já tem uma conta? "
+            )
+            Text(
+                text = "Faça login aqui!",
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .clickable{onSignInClick()}
+            )
+        }
+
     }
 }
 

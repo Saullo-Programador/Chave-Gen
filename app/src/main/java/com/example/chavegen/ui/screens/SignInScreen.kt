@@ -1,18 +1,21 @@
 package com.example.chavegen.ui.screens
 
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -21,15 +24,19 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import com.example.chavegen.R
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.chavegen.ui.components.CustomButton
 import com.example.chavegen.ui.components.CustomTextField
+import com.example.chavegen.ui.components.ErrorMessage
 import com.example.chavegen.ui.state.SignInUiState
 
 @Composable
@@ -66,31 +73,19 @@ fun SignInContent(
             .background(MaterialTheme.colorScheme.background)
             .verticalScroll(rememberScrollState())
     ) {
-        val isErro = uiState != null
-        AnimatedVisibility(visible = isErro) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Red)
-            ) {
-                val error = uiState ?: ""
-                Text(
-                    text = error,
-                    Modifier
-                        .padding(16.dp),
-                    color = Color.White
-                )
-            }
-        }
+        ErrorMessage(
+            message = uiState
+        )
         Column(
             modifier = modifier
                 .weight(1f)
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
-                .padding(23.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(horizontal = 23.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
+            SignInTop()
             SignInForm(
                 email = email,
                 emailOnValue = emailOnValue,
@@ -100,6 +95,37 @@ fun SignInContent(
                 onSignUpClick = onSignUpClick
             )
         }
+    }
+}
+
+@Composable
+fun SignInTop(){
+    Column(
+        modifier = Modifier
+            .padding(end = 30.dp, start = 30.dp, bottom = 24.dp)
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.logo1),
+            contentDescription = "Logo",
+            modifier = Modifier.size(160.dp)
+        )
+        Text(
+            text = stringResource(R.string.app_name),
+            fontSize = 50.sp,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier
+        )
+        Text(
+            text = stringResource(id = R.string.menssage_login),
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier
+                .padding(horizontal = 50.dp)
+        )
     }
 }
 
@@ -141,14 +167,14 @@ fun SignInForm(
             cornerRadius = 8,
             modifier = Modifier.padding(top = 5.dp)
         )
-        HomeBottom(
+        SignInBottom(
             onSignUpClick = onSignUpClick
         )
     }
 }
 
 @Composable
-fun HomeBottom(
+fun SignInBottom(
     onSignUpClick: () -> Unit
 ){
     Column(
@@ -158,7 +184,9 @@ fun HomeBottom(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
             Spacer(
                 modifier = Modifier
@@ -187,10 +215,10 @@ fun HomeBottom(
             horizontalArrangement = Arrangement.Center
         ){
             Text(
-                text = "Não tem conta? "
+                text = "Não tem uma conta? "
             )
             Text(
-                text = "Inscreva-se aqui",
+                text = "Inscreva-se aqui!",
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .clickable{onSignUpClick()}

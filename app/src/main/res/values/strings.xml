@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">ChaveGen</string>
-    <string name="bottom_bar_home">Home</string>
-    <string name="bottom_bar_profile">Profile</string>
-    <string name="bottom_bar_settings">Settings</string>
-    <string translatable="false" name="btn_row_cancel">Cancelar</string>
-    <string translatable="false" name="btn_row_maybe">Talvez</string>
-    <string translatable="false" name="btn_row_confirm">OK</string>
-    <string translatable="false" name="btn_template_name">Template</string>
+
+    <string name="menssage_login">Bem-Vindo, ao seu gerenciador de chaves de segurança</string>
+    <string name="menssage_sign_up">Crie sua conta, para poder geneciar suas chaves de segurança</string>
+
+    //tratamendo de error
+    <string name="user_error">Usuário inválido</string>
+    <string name="email_error">E-mail inválido</string>
+    <string name="password_error">Senha inválida</string>
+    <string name="confirm_password_error">Senhas não conferem</string>
+
 
 </resources>

@@ -3,11 +3,15 @@ package com.example.chavegen.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -137,14 +141,62 @@ fun SignInForm(
             cornerRadius = 8,
             modifier = Modifier.padding(top = 5.dp)
         )
-        TextButton(
-            onClick = onSignUpClick,
-            Modifier
-                .fillMaxWidth(0.8f)
-                .padding(8.dp)
+        HomeBottom(
+            onSignUpClick = onSignUpClick
+        )
+    }
+}
+
+@Composable
+fun HomeBottom(
+    onSignUpClick: () -> Unit
+){
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Cadastrar")
+            Spacer(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(1.dp)
+                    .padding(horizontal = 6.dp)
+                    .background(MaterialTheme.colorScheme.onBackground)
+            )
+            Text(
+                text = "Ou",
+                modifier = Modifier
+                    .padding(10.dp)
+            )
+            Spacer(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(1.dp)
+                    .padding(horizontal = 6.dp)
+                    .background(MaterialTheme.colorScheme.onBackground)
+            )
         }
+        Row (
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ){
+            Text(
+                text = "Não tem conta? "
+            )
+            Text(
+                text = "Inscreva-se aqui",
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .clickable{onSignUpClick()}
+            )
+        }
+
     }
 }
 

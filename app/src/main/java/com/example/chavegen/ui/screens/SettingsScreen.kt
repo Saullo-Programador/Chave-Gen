@@ -68,11 +68,6 @@ fun SettingsContent(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = " ${userName ?: "Carregando..."}",
-            fontSize = 19.sp,
-            fontWeight = FontWeight.Bold
-        )
         SettingsItem(
             text = "Usuario",
             itemText = " ${userName ?: "Carregando..."}",

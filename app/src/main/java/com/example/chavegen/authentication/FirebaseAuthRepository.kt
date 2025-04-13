@@ -23,12 +23,11 @@ class FirebaseAuthRepository @Inject constructor(
 
     init {
         firebaseAuth.addAuthStateListener {firebaseAuth ->
-            _currentUser.update {
-                it.copy(
-                    currentUser = firebaseAuth.currentUser,
-                    isInitLoading = false
-                )
-            }
+            _currentUser.value = AuthResult(
+                currentUser = firebaseAuth.currentUser,
+                isInitLoading = false
+
+            )
         }
     }
 

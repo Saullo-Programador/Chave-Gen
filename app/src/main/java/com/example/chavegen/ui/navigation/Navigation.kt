@@ -42,18 +42,7 @@ fun RootNavigationGraph(
         startDestination = AppGraph.initial.SPLASH
     ) {
         composable(route = AppGraph.initial.SPLASH) {
-            SplashScreen(
-                onNavigateToHome = {
-                    navController.navigate(AppGraph.home.ROOT) {
-                        popUpTo(AppGraph.initial.SPLASH) { inclusive = true }
-                    }
-                },
-                onNavigateToAuth = {
-                    navController.navigate(AppGraph.auth.ROOT) {
-                        popUpTo(AppGraph.initial.SPLASH) { inclusive = true }
-                    }
-                }
-            )
+            SplashScreen()
         }
         authNavGraph(navController = navController)
         homeNavGraph( navController = navController, onThemeToggle = onThemeToggle)

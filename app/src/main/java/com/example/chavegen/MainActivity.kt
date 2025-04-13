@@ -14,20 +14,24 @@
     import androidx.compose.runtime.collectAsState
     import androidx.compose.runtime.getValue
     import androidx.compose.runtime.mutableStateOf
+    import androidx.compose.runtime.remember
     import androidx.compose.runtime.saveable.rememberSaveable
     import androidx.compose.runtime.setValue
     import androidx.compose.ui.Modifier
     import androidx.compose.ui.graphics.Color
     import androidx.hilt.navigation.compose.hiltViewModel
     import androidx.navigation.compose.rememberNavController
+    import com.example.chavegen.ui.navigation.AppGraph
     import com.example.chavegen.ui.navigation.RootNavigationGraph
     import com.example.chavegen.ui.navigation.navigateToAuthGraph
     import com.example.chavegen.ui.navigation.navigateToHomeGraph
+    import com.example.chavegen.ui.screens.SplashScreen
     import com.example.chavegen.ui.theme.ChaveGenTheme
     import com.example.chavegen.ui.viewModel.AppState
     import com.example.chavegen.ui.viewModel.AppViewModel
     import com.google.accompanist.systemuicontroller.rememberSystemUiController
     import dagger.hilt.android.AndroidEntryPoint
+    import kotlinx.coroutines.delay
 
     @AndroidEntryPoint
     class MainActivity : ComponentActivity() {
@@ -38,7 +42,7 @@
                 var isSystemTheme by rememberSaveable { mutableStateOf(true) }
                 ChaveGenTheme(
                     dynamicColor = false,
-                    darkTheme = isSystemTheme
+                    darkTheme = isSystemTheme,
 
                 ){
                     val systemUiController = rememberSystemUiController()
@@ -51,9 +55,36 @@
                     Surface(
                         modifier = Modifier
                             .windowInsetsPadding(WindowInsets.statusBars)
-                            .fillMaxSize()
+                            .fillMaxSize(),
+
                     ) {
                         val navController = rememberNavController()
+                        val splashDurationMillis = 3000L
+                        val appViewModel: AppViewModel = hiltViewModel()
+                        var splashFinished by remember { mutableStateOf(false) }
+                        val appState by appViewModel.state
+                            .collectAsState(initial = AppState())
+
+                        LaunchedEffect(Unit) {
+                            delay(splashDurationMillis)
+                            splashFinished = true
+                        }
+
+                        when {
+                            appState.isInitLoading || !splashFinished -> {
+                                SplashScreen()
+                            }
+                            appState.user != null -> {
+                                LaunchedEffect(Unit) {
+                                    navController.navigateToHomeGraph()
+                                }
+                            }
+                            else -> {
+                                LaunchedEffect(Unit) {
+                                    navController.navigateToAuthGraph()
+                                }
+                            }
+                        }
 
 
                         RootNavigationGraph(

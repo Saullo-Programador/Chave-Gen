@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.rounded.Person
 import com.example.chavegen.R
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -21,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 @Composable
 fun ItemLogin(
-    modifier: Modifier = Modifier,
     taskName: String,
     taskDescription: String = "",
     onDeleteTask: () -> Unit = {},
@@ -29,108 +29,102 @@ fun ItemLogin(
     viewLoginItem: () -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
-
-    Card(
-        modifier = modifier
-            .padding(vertical = 5.dp)
+    Row(
+        modifier = Modifier
             .fillMaxWidth()
+            .padding(5.dp)
             .clickable(onClick = viewLoginItem),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
-        ),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+            Box(
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.primary),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.primary),
-                    contentAlignment = Alignment.Center
-                ) {
+                Icon(
+                    imageVector = Icons.Rounded.Person,
+                    tint = MaterialTheme.colorScheme.background,
+                    contentDescription = "icon",
+                    modifier = Modifier.size(30.dp)
+                )
 
-                }
-                Column(
-                    modifier = Modifier.padding(start = 10.dp)
-                ) {
+            }
+            Column(
+                modifier = Modifier.padding(start = 10.dp)
+            ) {
+                Text(
+                    text = taskName,
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                if (taskDescription.isNotEmpty()) {
                     Text(
-                        text = taskName,
-                        fontSize = 19.sp,
-                        fontWeight = FontWeight.SemiBold
+                        text = taskDescription,
+                        fontSize = 15.sp,
+                        color = Color.Gray
                     )
-                    if (taskDescription.isNotEmpty()) {
-                        Text(
-                            text = taskDescription,
-                            fontSize = 15.sp,
-                            color = Color.Gray
-                        )
-                    }
                 }
             }
+        }
 
-            Box {
-                IconButton(onClick = { expanded = true }) {
-                    Icon(
-                        painter = painterResource(R.drawable.icon_more_horiz),
-                        contentDescription = "Menu Opções",
-                        Modifier.size(30.dp)
-                    )
-                }
+        Box {
+            IconButton(onClick = { expanded = true }) {
+                Icon(
+                    painter = painterResource(R.drawable.icon_segment),
+                    contentDescription = "Menu Opções",
+                    Modifier.size(30.dp)
+                )
+            }
 
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                text = "Editar",
-                                fontSize = 17.sp
-                            )
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Create,
-                                contentDescription = "Editar",
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        },
-                        onClick = {
-                            expanded = false
-                            onEditTask()
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                text = "Excluir",
-                                fontSize = 17.sp
-                            )
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "Excluir",
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        },
-                        onClick = {
-                            expanded = false
-                            onDeleteTask()
-                        }
-                    )
-                }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = "Editar",
+                            fontSize = 17.sp
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Create,
+                            contentDescription = "Editar",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    },
+                    onClick = {
+                        expanded = false
+                        onEditTask()
+                    }
+                )
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = "Excluir",
+                            fontSize = 17.sp
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Excluir",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    },
+                    onClick = {
+                        expanded = false
+                        onDeleteTask()
+                    }
+                )
             }
         }
     }
@@ -156,7 +150,7 @@ fun SettingsItem(
         Text(
             text = text,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 19.sp,
+            fontSize = 20.sp,
         )
 
         when (optionClickItem) {

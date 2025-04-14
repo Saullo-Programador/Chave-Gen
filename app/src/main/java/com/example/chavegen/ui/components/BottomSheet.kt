@@ -1,6 +1,5 @@
 package com.example.chavegen.ui.components
 
-import android.R.id.message
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -17,15 +16,12 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -68,7 +64,12 @@ fun BottomSheet(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(siteName ?: "Não Encontrado", style = MaterialTheme.typography.titleLarge)
+            Text(
+                text= siteName ?: "Não Encontrado",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 35.sp
+            )
             IconButton(
                 onClick = { onEdit() },
             ) {
@@ -203,7 +204,6 @@ fun Item(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Ícone 1 (visibilidade)
                 AnimatedVisibility(visible = isPasswordField) {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         val icon = if (passwordVisible)
@@ -217,8 +217,6 @@ fun Item(
                         )
                     }
                 }
-
-                // Ícone 2 (cópia ou outro)
                 AnimatedVisibility(visible = icon2Item != null) {
                     IconButton(onClick = onIcon2Click) {
                         icon2Item?.let {

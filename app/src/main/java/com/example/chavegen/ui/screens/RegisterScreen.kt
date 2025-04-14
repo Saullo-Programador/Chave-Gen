@@ -9,19 +9,15 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,7 +30,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -164,7 +159,7 @@ fun RegisterContent(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            RegisterIconItem()
+            //RegisterIconItem()
             RegisterForm(
                 siteName = siteName,
                 siteUrl = siteUrl,
@@ -186,7 +181,7 @@ fun RegisterContent(
 
     }
 }
-
+/*
 @Composable
 fun RegisterIconItem() {
     Column(
@@ -200,12 +195,12 @@ fun RegisterIconItem() {
             modifier = Modifier
                 .size(110.dp)
                 .clip(RoundedCornerShape(80.dp))
-                .background(Color.LightGray),
+                .background(MaterialTheme.colorScheme.surface),
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = Icons.Default.Add,
-                tint = Color.Black,
+                imageVector = Icons.Rounded.Add,
+                tint = MaterialTheme.colorScheme.onBackground,
                 contentDescription = "add icon",
                 modifier = Modifier.size(70.dp)
             )
@@ -213,7 +208,7 @@ fun RegisterIconItem() {
         Text("Adicionar Icon", fontSize = 20.sp)
     }
 }
-
+*/
 @Composable
 fun RegisterForm(
     siteName: String = "",
@@ -238,6 +233,7 @@ fun RegisterForm(
             CustomTextField(
                 value = siteName,
                 onValueChange = onSiteNameChange,
+                onTrailingIconClick = {onSiteNameChange("")},
                 label = "Name",
                 placeholder = "Digite o nome do site",
                 trailingIcon = Icons.Default.Clear,
@@ -253,6 +249,7 @@ fun RegisterForm(
             CustomTextField(
                 value = siteUrl,
                 onValueChange = onSiteUrlChange,
+                onTrailingIconClick = {onSiteUrlChange("")},
                 label = "Url",
                 placeholder = "Digite a Url do site",
                 trailingIcon = Icons.Default.Clear,
@@ -268,6 +265,7 @@ fun RegisterForm(
             CustomTextField(
                 value = siteUser,
                 onValueChange = onSiteUserChange,
+                onTrailingIconClick = {onSiteUserChange("")},
                 label = "User",
                 placeholder = "Digite o Usuario do site",
                 trailingIcon = Icons.Default.Clear,
@@ -316,6 +314,7 @@ fun RegisterFormPassword(
             CustomTextField(
                 value = sitePassword,
                 onValueChange = onSitePasswordChange,
+                onTrailingIconClick = {onSitePasswordChange("")},
                 label = "Password",
                 placeholder = "Digite a senha do site",
                 leadingIcon = Icons.Default.Lock,

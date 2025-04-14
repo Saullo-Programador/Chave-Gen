@@ -15,10 +15,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -165,7 +165,7 @@ fun SignUpForm(
         CustomTextField(
             value = user,
             onValueChange = userOnValue,
-            leadingIcon = Icons.Default.AccountCircle,
+            leadingIcon = Icons.Default.Person,
             trailingIcon = Icons.Default.Clear,
             label = "Usuario",
             placeholder = "Digite seu Nome"

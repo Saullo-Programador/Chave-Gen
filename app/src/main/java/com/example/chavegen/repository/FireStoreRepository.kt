@@ -14,24 +14,23 @@ class FireStoreRepository @Inject constructor(
         fireStore = fireStore
     )
 
-    fun salvarLogin(userId: String, itemLogin: ItemLogin) {
-        dataSource.salvarLogin(userId, itemLogin )
+    suspend fun salvarLogin(userId: String, itemLogin: ItemLogin) {
+        dataSource.salvarLogin(userId, itemLogin)
     }
 
     fun getLogins(userId: String): Flow<MutableList<ItemLogin>> {
         return dataSource.getLogins(userId)
     }
 
-    fun deletarLogin(userId: String, documentId: String) {
+    suspend fun deletarLogin(userId: String, documentId: String) {
         dataSource.deletarLogin(userId, documentId)
     }
 
-    fun editarLogin(userId: String, itemLogin: ItemLogin) {
+    suspend fun editarLogin(userId: String, itemLogin: ItemLogin) {
         dataSource.editarLogin(userId, itemLogin)
     }
 
-    fun getLoginById(userId: String, documentId: String, callback: (ItemLogin?) -> Unit) {
-        dataSource.getLoginById(userId, documentId, callback)
+    suspend fun getLoginById(userId: String, documentId: String): ItemLogin? {
+        return dataSource.getLoginById(userId, documentId)
     }
-
 }

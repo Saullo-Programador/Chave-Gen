@@ -1,3 +1,5 @@
+
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -75,7 +77,6 @@ dependencies {
 
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.lottie.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

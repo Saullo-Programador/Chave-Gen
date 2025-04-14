@@ -37,30 +37,53 @@ fun EditLoginScreen(
     onNavigateBack: () -> Unit,
     state: EditLoginUiState
 ) {
-    if (state.siteName.isEmpty()) {
-        LoadingView()
-    } else {
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            TopBarComponent(
-                title = "Editar Login",
-                onNavigationClick = onNavigateBack,
-                navigationIcon = Icons.AutoMirrored.Filled.ArrowBack,
+    when {
+        state.isLoading -> {
+            LoadingView()
+        }
 
-            )
-            EditLoginContent(
-                viewModel = viewModel,
-                onNavigateBack = onNavigateBack,
-                state = state
-            )
+        state.errorMessage != null -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                androidx.compose.material3.Text(
+                    text = state.errorMessage,
+                    color = MaterialTheme.colorScheme.error
+                )
+                CustomButton(
+                    text = "Voltar",
+                    onClick = onNavigateBack
+                )
+            }
+        }
+
+        else -> {
+            Column(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                TopBarComponent(
+                    title = "Editar Login",
+                    onNavigationClick = onNavigateBack,
+                    navigationIcon = Icons.AutoMirrored.Filled.ArrowBack,
+                )
+                EditLoginContent(
+                    viewModel = viewModel,
+                    onNavigateBack = onNavigateBack,
+                    state = state
+                )
+            }
         }
     }
 }
+
 
 @Composable
 fun EditLoginContent(
@@ -114,11 +137,12 @@ fun EditLoginContent(
         )
 
         CustomButton(
-            text = "Salvar",
+            text = if (state.isLoading) "Salvando..." else "Salvar",
             onClick = {
                 viewModel.editarLogin()
                 onNavigateBack()
-            }
+            },
+            enabled = !state.isLoading
         )
     }
 }

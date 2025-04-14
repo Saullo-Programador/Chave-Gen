@@ -1,86 +1,77 @@
 package com.example.chavegen.data
 
-import android.util.Log
 import com.example.chavegen.models.ItemLogin
+import com.example.chavegen.security.CryptoUtils
 import com.example.chavegen.security.LoginCryptoMapper
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import javax.crypto.SecretKey
 
 class DataSource(
     private val fireStore: FirebaseFirestore
 ) {
+    private suspend fun getOrCreateUserKey(userId: String): SecretKey? {
+        val userDoc = fireStore.collection("users").document(userId).get().await()
+        val saltBase64 = userDoc.getString("salt")
 
-    fun salvarLogin(
-        userId: String,
-        itemLogin: ItemLogin
-    ) {
-        val encryptedItem = LoginCryptoMapper.toEncrypted(itemLogin)
-        fireStore
-            .collection("users")
+        val salt = if (saltBase64 != null) {
+            CryptoUtils.decodeSalt(saltBase64)
+        } else {
+            val novoSalt = CryptoUtils.gerarSalt()
+            fireStore.collection("users").document(userId)
+                .set(mapOf("salt" to CryptoUtils.encodeSalt(novoSalt)), SetOptions.merge())
+            novoSalt
+        }
+
+        return CryptoUtils.derivarChave(userId, salt)
+    }
+
+    suspend fun salvarLogin(userId: String, itemLogin: ItemLogin) {
+        val key = getOrCreateUserKey(userId) ?: return
+        val encryptedItem = LoginCryptoMapper.toEncrypted(itemLogin, key)
+
+        fireStore.collection("users")
             .document(userId)
             .collection("logins")
             .document(encryptedItem.documentId)
             .set(encryptedItem)
-            .addOnCompleteListener {
-                Log.i("DataSource", "Item login salvo com sucesso para o usuário $userId")
-            }
-            .addOnFailureListener { e ->
-                Log.e("DataSource", "Erro ao salvar Item login: $e")
-            }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun getLogins(userId: String): Flow<MutableList<ItemLogin>> {
         val loginsFlow = MutableStateFlow<MutableList<ItemLogin>>(mutableListOf())
 
-        fireStore
-            .collection("users")
+        fireStore.collection("users")
             .document(userId)
             .collection("logins")
             .addSnapshotListener { snapshot, e ->
-                if (e != null) {
-                    Log.e("DataSource", "Erro ao buscar logins: $e")
-                    return@addSnapshotListener
-                }
+                if (e != null || snapshot == null) return@addSnapshotListener
 
-                val listLogins = mutableListOf<ItemLogin>()
-                snapshot?.documents?.forEach { document ->
-                    document.toObject(ItemLogin::class.java)?.let {
-                        listLogins.add(LoginCryptoMapper.toDecrypted(it))
-                    }
+                // Coroutine para descriptografar com a chave
+                kotlinx.coroutines.GlobalScope.launch {
+                    val key = getOrCreateUserKey(userId) ?: return@launch
+                    val listLogins = snapshot.documents.mapNotNull { doc ->
+                        doc.toObject(ItemLogin::class.java)?.let {
+                            LoginCryptoMapper.toDecrypted(it, key)
+                        }
+                    }.toMutableList()
+                    loginsFlow.emit(listLogins)
                 }
-
-                loginsFlow.value = listLogins
             }
 
         return loginsFlow
     }
 
-    fun deletarLogin(
-        userId: String,
-        documentId: String
-    ) {
-        fireStore
-            .collection("users")
-            .document(userId)
-            .collection("logins")
-            .document(documentId)
-            .delete()
-            .addOnSuccessListener {
-                Log.i("DataSource", "Login deletado com sucesso para o usuário $userId")
-            }
-            .addOnFailureListener { e ->
-                Log.e("DataSource", "Erro ao deletar login: $e")
-            }
-    }
+    suspend fun editarLogin(userId: String, itemLogin: ItemLogin) {
+        val key = getOrCreateUserKey(userId) ?: return
+        val encryptedItem = LoginCryptoMapper.toEncrypted(itemLogin, key)
 
-    fun editarLogin(
-        userId: String,
-        itemLogin: ItemLogin
-    ) {
-        val encryptedItem = LoginCryptoMapper.toEncrypted(itemLogin)
-        fireStore
-            .collection("users")
+        fireStore.collection("users")
             .document(userId)
             .collection("logins")
             .document(encryptedItem.documentId)
@@ -92,31 +83,27 @@ class DataSource(
                     "sitePassword" to encryptedItem.sitePassword
                 )
             )
-            .addOnCompleteListener {
-                Log.i("DataSource", "Item login editado com sucesso para o usuário $userId")
-            }
-            .addOnFailureListener { e ->
-                Log.e("DataSource", "Erro ao editar Item login: $e")
-            }
     }
 
-    fun getLoginById(userId: String, documentId: String, callback: (ItemLogin?) -> Unit) {
-        fireStore
-            .collection("users")
+    fun deletarLogin(userId: String, documentId: String) {
+        fireStore.collection("users")
+            .document(userId)
+            .collection("logins")
+            .document(documentId)
+            .delete()
+    }
+
+    suspend fun getLoginById(userId: String, documentId: String): ItemLogin? {
+        val key = getOrCreateUserKey(userId) ?: return null
+        val document = fireStore.collection("users")
             .document(userId)
             .collection("logins")
             .document(documentId)
             .get()
-            .addOnSuccessListener { document ->
-                val item = document.toObject(ItemLogin::class.java)
-                item?.let {
-                    val decrypted = LoginCryptoMapper.toDecrypted(it)
-                    callback(decrypted)
-                } ?: callback(null)
-            }
-            .addOnFailureListener {
-                Log.e("DataSource", "Erro ao buscar login por ID: $it")
-                callback(null)
-            }
+            .await()
+
+        return document.toObject(ItemLogin::class.java)?.let {
+            LoginCryptoMapper.toDecrypted(it, key)
+        }
     }
 }

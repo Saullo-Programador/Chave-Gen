@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.chavegen.models.ItemLogin
 import com.example.chavegen.ui.components.BottomSheet
+import com.example.chavegen.ui.components.DialogComponent
 import com.example.chavegen.ui.components.FloatingButton
 import com.example.chavegen.ui.components.ItemLogin
 import com.example.chavegen.ui.components.TopBarComponent
@@ -61,6 +62,9 @@ fun HomeView(
     var showSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var selectedLogin by remember { mutableStateOf<ItemLogin?>(null) }
+    var openAlertDialog by remember {
+        mutableStateOf(false)
+    }
 
 
     Scaffold(
@@ -93,6 +97,7 @@ fun HomeView(
                     showSheet = true
                 },
                 onEditItem = onEditItem,
+                onDeleteClick = {openAlertDialog = true},
             )
             if (showSheet && selectedLogin != null) {
                 ModalBottomSheet(
@@ -112,9 +117,8 @@ fun HomeView(
                         },
                         onDelete = {
                             showSheet = false
-                            selectedLogin?.let {
-                                viewModel.deletarLogin(it.documentId)
-                            }
+                            openAlertDialog = true
+
                         },
                         siteName = selectedLogin?.siteName ?: "",
                         siteUsername = selectedLogin?.siteUser ?: "",
@@ -124,6 +128,17 @@ fun HomeView(
                 }
             }
         }
+        if (openAlertDialog){
+            DialogComponent(
+                onDismiss = { openAlertDialog = false },
+                onConfirm = {
+                    selectedLogin?.let {
+                        viewModel.deletarLogin(it.documentId)
+                    }
+                    openAlertDialog = false
+                }
+            )
+        }
     }
 }
 
@@ -132,6 +147,7 @@ fun HomeContent(
     viewModel: HomeViewModel,
     onViewLoginItem: (ItemLogin) -> Unit,
     onEditItem: (String) -> Unit,
+    onDeleteClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -144,6 +160,7 @@ fun HomeContent(
             viewModel = viewModel,
             onViewLoginItem = onViewLoginItem,
             onEditItem = onEditItem,
+            onDeleteClick = onDeleteClick
         )
     }
 }
@@ -153,6 +170,7 @@ fun HomeList(
     viewModel: HomeViewModel,
     onViewLoginItem: (ItemLogin) -> Unit,
     onEditItem: (String) -> Unit = {},
+    onDeleteClick: () -> Unit = {},
 ) {
     val logins by viewModel.logins.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -162,31 +180,34 @@ fun HomeList(
             loading -> {
                 LoadingView()
             }
-            logins.isEmpty() -> {
-                TextView(text = "Nenhum login salvo ainda.")
-            }
             else -> {
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(5.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    items(logins.size) { index ->
-                        val login = logins[index]
-                        ItemLogin(
-                            taskName = login.siteName ?: "",
-                            taskDescription = login.siteUrl ?: "",
-                            onDeleteTask = {
-                                viewModel.deletarLogin(login.documentId)
-                            },
-                            onEditTask = {
-                                viewModel.editarLogin(login)
-                                onEditItem(login.documentId)
-                            },
-                            viewLoginItem = {
-                                onViewLoginItem(login)
-                            }
-                        )
+                    if (logins.isEmpty()) {
+                        item {
+                            TextView(text = "Nenhum login cadastrado")
+                        }
+                    } else {
+                        items(logins.size) { index ->
+                            val login = logins[index]
+                            ItemLogin(
+                                taskName = login.siteName ?: "",
+                                taskDescription = login.siteUrl ?: "",
+                                onDeleteTask = {
+                                    onDeleteClick()
+                                },
+                                onEditTask = {
+                                    viewModel.editarLogin(login)
+                                    onEditItem(login.documentId)
+                                },
+                                viewLoginItem = {
+                                    onViewLoginItem(login)
+                                }
+                            )
+                        }
                     }
                 }
             }

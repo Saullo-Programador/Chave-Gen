@@ -60,6 +60,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
         composable(route = AppGraph.auth.SIGN_IN) {
             val viewModel: SignInViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
+            val isLoading by viewModel.isLoading.collectAsState()
             val scope = rememberCoroutineScope()
             SignInScreen(
                 onSignInClick = {
@@ -74,12 +75,14 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
                     navController.navigate(AppGraph.auth.FORGOT)
                 },
                 uiState = uiState,
+                isLoading = isLoading
             )
         }
         composable(route = AppGraph.auth.SIGN_UP) {
             val viewModel: SignUpViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
             val scope = rememberCoroutineScope()
+            val isLoading by viewModel.isLoading.collectAsState()
             val signUpIsSuccessful by viewModel.signUpIsSuccessful.collectAsState(false)
 
             LaunchedEffect(signUpIsSuccessful) {
@@ -98,7 +101,8 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
                 onSignInClick = {
                     navController.navigate(AppGraph.auth.SIGN_IN)
                 },
-                uiState = uiState
+                uiState = uiState,
+                isLoading = isLoading
             )
         }
 

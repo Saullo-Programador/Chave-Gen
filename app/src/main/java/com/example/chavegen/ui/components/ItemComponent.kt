@@ -33,6 +33,7 @@ fun ItemLogin(
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
+            .clip(RoundedCornerShape(12.dp))
             .clickable(onClick = viewLoginItem),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

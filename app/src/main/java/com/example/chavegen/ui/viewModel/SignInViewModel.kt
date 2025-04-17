@@ -3,6 +3,7 @@ package com.example.chavegen.ui.viewModel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.chavegen.authentication.FirebaseAuthRepository
 import com.example.chavegen.ui.state.SignInUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,6 +11,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,6 +55,38 @@ class SignInViewModel @Inject constructor(
                 it.copy(erro = null)
             }
         }
+    }
+
+    fun forgotPassword(){
+        val email = _uiState.value.email
+
+        if (email.isBlank()){
+            mostrarMensagemTemporaria("Preencha o e-mail corretamente",false)
+            return
+        }
+
+        viewModelScope.launch {
+            val result = firebaseAuthRepository.sendPasswordResetEmail(email)
+
+            result.onSuccess {
+                mostrarMensagemTemporaria("E-mail de recuperação enviado com sucesso!", true)
+            }.onFailure {
+                mostrarMensagemTemporaria("Erro ao enviar e-mail de recuperação", false)
+            }
+        }
 
     }
+    private fun mostrarMensagemTemporaria(mensagem: String, isResetEmailSent: Boolean = false) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(
+                erro = mensagem,
+                isResetEmailSent = isResetEmailSent
+            ) }
+            delay(3000)
+            _uiState.update { it.copy(
+                erro = null,
+            ) }
+        }
+    }
+
 }

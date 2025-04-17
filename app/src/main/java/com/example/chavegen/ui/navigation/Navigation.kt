@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -12,11 +13,11 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import com.example.chavegen.ui.screens.EditLoginScreen
+import com.example.chavegen.ui.screens.ForgotScreen
 import com.example.chavegen.ui.screens.HomeScreen
 import com.example.chavegen.ui.screens.RegisterMain
 import com.example.chavegen.ui.screens.SettingsScreen
@@ -29,6 +30,7 @@ import com.example.chavegen.ui.viewModel.RegisterViewModel
 import com.example.chavegen.ui.viewModel.SettingsViewModel
 import com.example.chavegen.ui.viewModel.SignInViewModel
 import com.example.chavegen.ui.viewModel.SignUpViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -68,6 +70,9 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
                 onSignUpClick = {
                     navController.navigate(AppGraph.auth.SIGN_UP)
                 },
+                onForgotPasswordClick = {
+                    navController.navigate(AppGraph.auth.FORGOT)
+                },
                 uiState = uiState,
             )
         }
@@ -95,6 +100,37 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
                 },
                 uiState = uiState
             )
+        }
+
+        composable (route = AppGraph.auth.FORGOT){
+            val viewModel: SignInViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsState()
+            val scope = rememberCoroutineScope()
+            val currentIsResetEmailSent by rememberUpdatedState(uiState.isResetEmailSent)
+
+            LaunchedEffect(currentIsResetEmailSent) {
+                if (currentIsResetEmailSent) {
+                    delay(3500)
+                    navController.navigate(AppGraph.auth.ROOT) {
+                        popUpTo(AppGraph.auth.ROOT) {
+                            inclusive = true
+                        }
+                    }
+                }
+            }
+
+            ForgotScreen(
+                uiState = uiState,
+                onForgotClick = {
+                    scope.launch {
+                        viewModel.forgotPassword()
+                    }
+                },
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+
         }
     }
 }

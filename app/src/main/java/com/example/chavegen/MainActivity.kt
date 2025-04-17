@@ -21,7 +21,6 @@
     import androidx.compose.ui.graphics.Color
     import androidx.hilt.navigation.compose.hiltViewModel
     import androidx.navigation.compose.rememberNavController
-    import com.example.chavegen.ui.navigation.AppGraph
     import com.example.chavegen.ui.navigation.RootNavigationGraph
     import com.example.chavegen.ui.navigation.navigateToAuthGraph
     import com.example.chavegen.ui.navigation.navigateToHomeGraph

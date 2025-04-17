@@ -40,7 +40,8 @@ import com.example.chavegen.ui.state.SignInUiState
 fun SignInScreen(
     uiState: SignInUiState,
     onSignInClick: () -> Unit,
-    onSignUpClick: () -> Unit
+    onSignUpClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit
 ) {
     SignInContent(
         email = uiState.email,
@@ -49,6 +50,7 @@ fun SignInScreen(
         passwordOnValue = uiState.onPasswordChange,
         onSignInClick = onSignInClick,
         onSignUpClick = onSignUpClick,
+        onForgotPasswordClick = onForgotPasswordClick,
         uiState = uiState.erro
     )
 }
@@ -62,13 +64,13 @@ fun SignInContent(
     passwordOnValue: (String) -> Unit,
     onSignInClick: () -> Unit,
     onSignUpClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit = {},
     uiState: String?
 ) {
     Column(
         modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .verticalScroll(rememberScrollState())
     ) {
         ErrorMessage(
             message = uiState
@@ -89,7 +91,8 @@ fun SignInContent(
                 password = password,
                 passwordOnValue = passwordOnValue,
                 onSignInClick = onSignInClick,
-                onSignUpClick = onSignUpClick
+                onSignUpClick = onSignUpClick,
+                onForgotPasswordClick = onForgotPasswordClick
             )
         }
     }
@@ -134,7 +137,8 @@ fun SignInForm(
     password: String,
     passwordOnValue: (String) -> Unit,
     onSignInClick: () -> Unit,
-    onSignUpClick: () -> Unit
+    onSignUpClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit
 ){
     Column(
         modifier = modifier
@@ -147,19 +151,31 @@ fun SignInForm(
             onValueChange = emailOnValue,
             leadingIcon = Icons.Default.Email,
             trailingIcon = Icons.Default.Clear,
-            label = "E-mail",
-            placeholder = "Digite seu Email"
+            label = stringResource(id = R.string.email_Label),
+            placeholder = stringResource(id = R.string.email_placeholder)
         )
         CustomTextField(
             value = password,
             onValueChange = passwordOnValue,
             leadingIcon = Icons.Default.Lock,
             isPasswordField = true,
-            label = "Senha",
-            placeholder = "Digite sua Senha"
+            label = stringResource(id = R.string.password_Label),
+            placeholder = stringResource(id = R.string.password_placeholder)
         )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End
+        ) {
+            Text(
+                text = stringResource(id = R.string.forgot_password),
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .clickable{onForgotPasswordClick()}
+            )
+        }
         CustomButton(
-            text = "Entrar",
+            text = stringResource(id = R.string.Logar),
             onClick = onSignInClick,
             cornerRadius = 8,
             modifier = Modifier.padding(top = 5.dp)
@@ -215,7 +231,7 @@ fun SignInBottom(
                 text = "Não tem uma conta? "
             )
             Text(
-                text = "Inscreva-se aqui!",
+                text = stringResource(id = R.string.sign_up),
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .clickable{onSignUpClick()}
@@ -231,7 +247,8 @@ fun SignIpPreview() {
     SignInScreen(
         onSignInClick = {},
         onSignUpClick = {},
-        uiState = SignInUiState()
+        uiState = SignInUiState(),
+        onForgotPasswordClick = {}
     )
 }
 
@@ -241,6 +258,7 @@ fun SignIp1Preview() {
     SignInScreen(
         onSignInClick = {},
         onSignUpClick = {},
+        onForgotPasswordClick = {},
         uiState = SignInUiState(
             erro = "Error ao fazer login"
         )

@@ -5,6 +5,7 @@ object AuthGraph {
     const val ROOT = "auth_graph"
     const val SIGN_IN = "sign_in"
     const val SIGN_UP = "sign_up"
+    const val FORGOT = "forgot"
 }
 
 object HomeGraph {

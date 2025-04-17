@@ -16,9 +16,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 @Composable
 fun TopBarComponent(
     title: String,
+    fontSize: Int =30,
     modifier: Modifier = Modifier,
     navigationIcon: ImageVector? = null,
     onNavigationClick: () -> Unit = {},
@@ -58,7 +60,7 @@ fun TopBarComponent(
                 Text(
                     text = title,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp,
+                    fontSize = fontSize.sp,
                     letterSpacing = 2.sp,
                     color = contentColor,
                 )

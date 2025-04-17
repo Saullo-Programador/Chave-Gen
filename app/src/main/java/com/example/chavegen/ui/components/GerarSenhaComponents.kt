@@ -61,6 +61,9 @@ fun GerarSenhaComponent(
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
+                            colors = CheckboxDefaults.colors(
+                                checkmarkColor = Color.White
+                            ),
                             checked = passwordState.useUppercase,
                             onCheckedChange = { viewModel.onPasswordOptionsChange(passwordState.copy(useUppercase = it)) }
                         )
@@ -68,6 +71,9 @@ fun GerarSenhaComponent(
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
+                            colors = CheckboxDefaults.colors(
+                                checkmarkColor = Color.White
+                            ),
                             checked = passwordState.useLowercase,
                             onCheckedChange = { viewModel.onPasswordOptionsChange(passwordState.copy(useLowercase = it)) }
                         )
@@ -75,6 +81,9 @@ fun GerarSenhaComponent(
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
+                            colors = CheckboxDefaults.colors(
+                                checkmarkColor = Color.White
+                            ),
                             checked = passwordState.useNumbers,
                             onCheckedChange = { viewModel.onPasswordOptionsChange(passwordState.copy(useNumbers = it)) }
                         )
@@ -82,6 +91,9 @@ fun GerarSenhaComponent(
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
+                            colors = CheckboxDefaults.colors(
+                                checkmarkColor = Color.White
+                            ),
                             checked = passwordState.useSymbols,
                             onCheckedChange = { viewModel.onPasswordOptionsChange(passwordState.copy(useSymbols = it)) }
                         )
@@ -102,7 +114,11 @@ fun GerarSenhaComponent(
                     onClick = { viewModel.generatePassword() },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(text = "Gerar Senha")
+                    Text(
+                        text = "Gerar Senha",
+                        color = Color.White,
+                        fontSize = 18.sp
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -117,7 +133,11 @@ fun GerarSenhaComponent(
                     enabled = generatedPassword.isNotEmpty(),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(text = "Usar Senha")
+                    Text(
+                        text = "Usar Senha",
+                        color = Color.White,
+                        fontSize = 18.sp
+                    )
                 }
             }
         }

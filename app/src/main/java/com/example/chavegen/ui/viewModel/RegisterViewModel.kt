@@ -68,7 +68,7 @@ class RegisterViewModel @Inject constructor(
     }
 
     //salvar login
-    fun verificarLogin(): Boolean {
+    suspend fun verificarLogin(): Boolean {
         val userId = fireAuth.getCurrentUserId()
         return if (
             _uiState.value.siteName.isNotEmpty() &&
@@ -82,15 +82,21 @@ class RegisterViewModel @Inject constructor(
                 siteUser = _uiState.value.siteUser,
                 sitePassword = _uiState.value.sitePassword
             )
-            fireStoreRepository.salvarLogin(
-                userId = userId ?: return false,
-                itemLogin = itemLogin
-            )
-            _eventMessage.value = "Sucesso ao salvar o login"
-            true
+            try {
+                fireStoreRepository.salvarLogin(
+                    userId = userId ?: return false,
+                    itemLogin = itemLogin
+                )
+                _eventMessage.value = "Sucesso ao salvar o login"
+                true
+            } catch (e: Exception) {
+                _eventMessage.value = "Erro ao salvar: ${e.message}"
+                false
+            }
         } else {
             _eventMessage.value = "Preencha os campos de Nome do Site, Login e Senha"
             false
         }
     }
+
 }

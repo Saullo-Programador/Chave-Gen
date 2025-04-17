@@ -175,27 +175,27 @@ fun SignUpForm(
             onValueChange = emailOnValue,
             leadingIcon = Icons.Default.Email,
             trailingIcon = Icons.Default.Clear,
-            label = "E-mail",
-            placeholder = "Digite seu Email"
+            label = stringResource(R.string.email_Label),
+            placeholder = stringResource(R.string.email_placeholder)
         )
         CustomTextField(
             value = password,
             onValueChange = passwordOnValue,
             leadingIcon = Icons.Default.Lock,
             isPasswordField = true,
-            label = "Senha",
-            placeholder = "Digite sua Senha"
+            label = stringResource(R.string.password_Label),
+            placeholder = stringResource(R.string.password_placeholder)
         )
         CustomTextField(
             value = confirmPassword,
             onValueChange = confirmPasswordOnValue,
             leadingIcon = Icons.Default.Lock,
             isPasswordField = true,
-            label = "Confirmar Senha",
-            placeholder = "Digite sua Senha"
+            label = stringResource(R.string.confirm_password_Label),
+            placeholder = stringResource(R.string.confirm_password_placeholder)
         )
         CustomButton(
-            text = "Cadastrar",
+            text = stringResource(R.string.cadastrar),
             onClick = startOnClick,
             cornerRadius = 8,
             modifier = Modifier.padding(top = 5.dp)
@@ -252,7 +252,7 @@ fun SignUpBottom(
                 text = "Já tem uma conta? "
             )
             Text(
-                text = "Faça login aqui!",
+                text = stringResource(id = R.string.sign_in),
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .clickable{onSignInClick()}

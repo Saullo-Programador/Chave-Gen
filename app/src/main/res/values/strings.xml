@@ -10,5 +10,22 @@
     <string name="password_error">Senha inválida</string>
     <string name="confirm_password_error">Senhas não conferem</string>
 
+    //SignIn
+    <string name="email_Label">E-mail</string>
+    <string name="password_Label">Senha</string>
+    <string name="email_placeholder">Digite seu E-mail</string>
+    <string name="password_placeholder">Digite sua Senha</string>
+    <string name="forgot_password">Esqueceu a senha?</string>
+    <string name="Logar">Entrar</string>
+    <string name="sign_up">Inscreva-se aqui!</string>
+
+    //SignUp
+    <string name="user_Label">Usuario</string>
+    <string name="user_placeholder">Digite seu Usuario</string>
+    <string name="confirm_password_placeholder">Confirme sua Senha</string>
+    <string name="confirm_password_Label">Confirmar Senha</string>
+    <string name="sign_in">Faça login aqui!</string>
+    <string name="cadastrar">Cadastrar</string>
+
 
 </resources>

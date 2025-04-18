@@ -34,14 +34,18 @@ import com.example.chavegen.R
 import com.example.chavegen.ui.components.CustomButton
 import com.example.chavegen.ui.components.CustomTextField
 import com.example.chavegen.ui.components.ErrorMessage
+import com.example.chavegen.ui.components.view.LoadingView
 import com.example.chavegen.ui.state.SignUpUiState
 
 @Composable
 fun SignUpScreen(
     uiState: SignUpUiState,
     onSignUpClick: () -> Unit,
-    onSignInClick: () -> Unit
+    onSignInClick: () -> Unit,
+    isLoading: Boolean = false
 ) {
+
+
 
     SignUpContent(
         user = uiState.user,
@@ -54,7 +58,8 @@ fun SignUpScreen(
         confirmPasswordOnValue = uiState.onConfirmPasswordChange,
         startOnClick = onSignUpClick,
         onSignInClick = onSignInClick,
-        uiState = uiState.error
+        uiState = uiState.error,
+        isLoading = isLoading
     )
 }
 
@@ -71,7 +76,8 @@ fun SignUpContent(
     confirmPasswordOnValue: (String) -> Unit,
     startOnClick: () -> Unit,
     onSignInClick: () -> Unit,
-    uiState: String?
+    uiState: String?,
+    isLoading: Boolean = false
 ) {
     Column(
         modifier
@@ -102,6 +108,9 @@ fun SignUpContent(
                 onSignInClick = onSignInClick
             )
         }
+    }
+    if (isLoading) {
+        LoadingView()
     }
 }
 

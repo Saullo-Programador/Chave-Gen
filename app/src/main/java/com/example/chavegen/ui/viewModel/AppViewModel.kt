@@ -15,7 +15,7 @@ data class AppState(
 
 @HiltViewModel
 class AppViewModel @Inject constructor(
-    firebaseAuthRepository: FirebaseAuthRepository
+    private val firebaseAuthRepository: FirebaseAuthRepository
 ): ViewModel() {
     private val _state = MutableStateFlow(AppState())
     val state = _state

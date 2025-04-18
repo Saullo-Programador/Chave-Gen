@@ -34,13 +34,11 @@ import androidx.compose.ui.unit.sp
 import com.example.chavegen.ui.components.CustomButton
 import com.example.chavegen.ui.components.CustomTextField
 import com.example.chavegen.ui.components.ErrorMessage
-import com.example.chavegen.ui.components.view.LoadingView
 import com.example.chavegen.ui.state.SignInUiState
 
 @Composable
 fun SignInScreen(
     uiState: SignInUiState,
-    isLoading: Boolean = false,
     onSignInClick: () -> Unit,
     onSignUpClick: () -> Unit,
     onForgotPasswordClick: () -> Unit
@@ -53,8 +51,7 @@ fun SignInScreen(
         onSignInClick = onSignInClick,
         onSignUpClick = onSignUpClick,
         onForgotPasswordClick = onForgotPasswordClick,
-        uiState = uiState.erro,
-        isLoading = isLoading
+        uiState = uiState.erro
     )
 }
 
@@ -68,8 +65,7 @@ fun SignInContent(
     onSignInClick: () -> Unit,
     onSignUpClick: () -> Unit,
     onForgotPasswordClick: () -> Unit = {},
-    uiState: String?,
-    isLoading: Boolean = false
+    uiState: String?
 ) {
     Column(
         modifier
@@ -99,9 +95,6 @@ fun SignInContent(
                 onForgotPasswordClick = onForgotPasswordClick
             )
         }
-    }
-    if (isLoading) {
-        LoadingView()
     }
 }
 

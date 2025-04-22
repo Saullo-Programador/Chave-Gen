@@ -42,10 +42,8 @@ fun SignUpScreen(
     uiState: SignUpUiState,
     onSignUpClick: () -> Unit,
     onSignInClick: () -> Unit,
-    isLoading: Boolean = false
+    isLoading: Boolean = false,
 ) {
-
-
 
     SignUpContent(
         user = uiState.user,

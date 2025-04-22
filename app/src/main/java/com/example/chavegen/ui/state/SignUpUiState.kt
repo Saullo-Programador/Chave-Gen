@@ -9,5 +9,6 @@ data class SignUpUiState(
     val onEmailChange: (String) -> Unit = {},
     val onPasswordChange: (String) -> Unit = {},
     val onConfirmPasswordChange: (String) -> Unit = {},
-    val error: String? = null
+    val error: String? = null,
+    val success: String? = null
 )

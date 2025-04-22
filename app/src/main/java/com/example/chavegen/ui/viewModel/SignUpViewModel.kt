@@ -59,7 +59,8 @@ class SignUpViewModel @Inject constructor(
 
     fun signUp() {
         viewModelScope.launch {
-            if (_uiState.value.user.isBlank() || _uiState.value.email.isBlank() || _uiState.value.password.isBlank() || _uiState.value.confirmPassword.isBlank()) {
+            val state = _uiState.value
+            if (state.user.isBlank() || state.email.isBlank() || state.password.isBlank() || state.confirmPassword.isBlank()) {
                 _uiState.update {
                     it.copy(
                         error = "Preencha todos os campos"
@@ -71,6 +72,15 @@ class SignUpViewModel @Inject constructor(
                         error = null
                     )
                 }
+                return@launch
+            }
+            if (state.password != state.confirmPassword) {
+                _uiState.update {
+                    it.copy(
+                        error = "As senhas não coincidem"
+                    )
+                }
+
                 return@launch
             }
             _isLoading.value = true
@@ -100,4 +110,5 @@ class SignUpViewModel @Inject constructor(
             }
         }
     }
+
 }

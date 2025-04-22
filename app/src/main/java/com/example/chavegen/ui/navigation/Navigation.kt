@@ -87,6 +87,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
 
             LaunchedEffect(signUpIsSuccessful) {
                 if (signUpIsSuccessful) {
+                    delay(500)
                     navOptions {
                         popUpTo(AppGraph.auth.ROOT) { inclusive = true }
                     }

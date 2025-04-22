@@ -69,26 +69,24 @@
                             splashFinished = true
                         }
 
-                        when {
-                            appState.isInitLoading || !splashFinished -> {
-                                SplashScreen()
-                            }
-                            appState.user != null -> {
-                                LaunchedEffect(Unit) {
-                                    navController.navigateToHomeGraph()
-                                }
-                            }
-                            else -> {
-                                LaunchedEffect(Unit) {
-                                    navController.navigateToAuthGraph()
-                                }
+                        LaunchedEffect(appState, splashFinished) {
+                            if (!splashFinished || appState.isInitLoading) return@LaunchedEffect
+
+                            if (appState.isLoggedIn) {
+                                navController.navigateToHomeGraph()
+                            } else {
+                                navController.navigateToAuthGraph()
                             }
                         }
 
+                        if (appState.isInitLoading || !splashFinished) {
+                            SplashScreen()
+                        }
 
+                        // Navegação principal
                         RootNavigationGraph(
                             navController = navController,
-                            onThemeToggle ={
+                            onThemeToggle = {
                                 isSystemTheme = !isSystemTheme
                             }
                         )

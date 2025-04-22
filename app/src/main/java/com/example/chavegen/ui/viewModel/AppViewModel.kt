@@ -10,7 +10,8 @@ import javax.inject.Inject
 
 data class AppState(
     val user: User? = null,
-    val isInitLoading: Boolean = true
+    val isInitLoading: Boolean = true,
+    val isLoggedIn: Boolean = false
 )
 
 @HiltViewModel
@@ -19,9 +20,15 @@ class AppViewModel @Inject constructor(
 ): ViewModel() {
     private val _state = MutableStateFlow(AppState())
     val state = _state
-        .combine(firebaseAuthRepository.currentUser){ appState, authResult ->
-            val user = authResult.currentUser?.email?.let{User(it)}
-            appState.copy(user = user, isInitLoading = authResult.isInitLoading)
+        .combine(firebaseAuthRepository.currentUser) { appState, authResult ->
+            val isUserLoggedIn = authResult.currentUser != null
+            val user = authResult.currentUser?.email?.let { User(it) }
+
+            appState.copy(
+                user = user,
+                isInitLoading = authResult.isInitLoading,
+                isLoggedIn = isUserLoggedIn
+            )
         }
 
 }

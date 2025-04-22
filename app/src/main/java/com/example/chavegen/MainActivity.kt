@@ -21,7 +21,7 @@
     import androidx.compose.ui.graphics.Color
     import androidx.hilt.navigation.compose.hiltViewModel
     import androidx.navigation.compose.rememberNavController
-    import com.example.chavegen.ui.navigation.RootNavigationGraph
+    import com.example.chavegen.ui.navigation.MainNavGraph
     import com.example.chavegen.ui.navigation.navigateToAuthGraph
     import com.example.chavegen.ui.navigation.navigateToHomeGraph
     import com.example.chavegen.ui.screens.SplashScreen
@@ -86,7 +86,7 @@
                         }
 
 
-                        RootNavigationGraph(
+                        MainNavGraph(
                             navController = navController,
                             onThemeToggle ={
                                 isSystemTheme = !isSystemTheme

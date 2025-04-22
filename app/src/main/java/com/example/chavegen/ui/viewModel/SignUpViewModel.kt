@@ -1,7 +1,6 @@
 package com.example.chavegen.ui.viewModel
 
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chavegen.authentication.FirebaseAuthRepository
@@ -24,11 +23,17 @@ class SignUpViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SignUpUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _signUpIsSuccessful = MutableSharedFlow<Boolean>()
-    val signUpIsSuccessful = _signUpIsSuccessful.asSharedFlow()
-
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
+    sealed class UiEvent {
+        object NavigateToLogin : UiEvent()
+        data class ShowError(val message: String) : UiEvent()
+    }
 
     init {
         _uiState.update { currentState ->
@@ -59,45 +64,40 @@ class SignUpViewModel @Inject constructor(
 
     fun signUp() {
         viewModelScope.launch {
-            if (_uiState.value.user.isBlank() || _uiState.value.email.isBlank() || _uiState.value.password.isBlank() || _uiState.value.confirmPassword.isBlank()) {
-                _uiState.update {
-                    it.copy(
-                        error = "Preencha todos os campos"
-                    )
-                }
-                delay(3000)
-                _uiState.update {
-                    it.copy(
-                        error = null
-                    )
-                }
+            val state = _uiState.value
+            if (state.user.isBlank() || state.email.isBlank() || state.password.isBlank() || state.confirmPassword.isBlank()) {
+                showErrorAndClear("Preencha todos os campos")
                 return@launch
             }
+
+            if (state.password != state.confirmPassword) {
+                showErrorAndClear("As senhas não coincidem")
+                return@launch
+            }
+
             _isLoading.value = true
             try {
-                firebaseAuthRepository
-                    .signUp(
-                        email = _uiState.value.email,
-                        password = _uiState.value.password,
-                        userName = _uiState.value.user
-                    )
-                _signUpIsSuccessful.emit(true)
+                val result = firebaseAuthRepository.signUp(
+                    email = state.email,
+                    password = state.password,
+                    userName = state.user
+                )
+                if (result) {
+                    _eventFlow.emit(UiEvent.NavigateToLogin)
+                    firebaseAuthRepository.signOut()
+                } else {
+                    showErrorAndClear("Erro ao cadastrar o usuário")
+                }
             } catch (e: Exception) {
-                Log.e("SignUpViewModel", "signUp: ", e)
-                _uiState.update {
-                    it.copy(
-                        error = "Erro ao cadastrar o usuário"
-                    )
-                }
-                delay(3000)
-                _uiState.update {
-                    it.copy(
-                        error = null
-                    )
-                }
+                showErrorAndClear("Erro ao tentar cadastrar o usuário: ${e.message}")
             } finally {
                 _isLoading.value = false
             }
         }
     }
+    private suspend fun showErrorAndClear(message: String) {
+        _eventFlow.emit(UiEvent.ShowError(message))
+        delay(3000)
+    }
+
 }

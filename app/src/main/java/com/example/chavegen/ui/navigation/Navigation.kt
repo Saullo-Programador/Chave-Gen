@@ -1,11 +1,13 @@
 package com.example.chavegen.ui.navigation
 
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -34,7 +36,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun RootNavigationGraph(
+fun MainNavGraph(
     navController: NavHostController,
     onThemeToggle: () -> Unit
 ) {
@@ -83,15 +85,23 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
             val uiState by viewModel.uiState.collectAsState()
             val scope = rememberCoroutineScope()
             val isLoading by viewModel.isLoading.collectAsState()
-            val signUpIsSuccessful by viewModel.signUpIsSuccessful.collectAsState(false)
 
-            LaunchedEffect(signUpIsSuccessful) {
-                if (signUpIsSuccessful) {
-                    navOptions {
-                        popUpTo(AppGraph.auth.ROOT) { inclusive = true }
+            val context = LocalContext.current
+            LaunchedEffect(key1 = true) {
+                viewModel.eventFlow.collect { event ->
+                    when (event) {
+                        is SignUpViewModel.UiEvent.NavigateToLogin -> {
+                            navController.navigate(AppGraph.auth.SIGN_IN) {
+                                popUpTo(AppGraph.auth.SIGN_UP) { inclusive = true }
+                            }
+                        }
+                        is SignUpViewModel.UiEvent.ShowError -> {
+                            Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
+
             SignUpScreen(
                 onSignUpClick = {
                     scope.launch {

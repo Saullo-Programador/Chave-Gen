@@ -5,15 +5,15 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 data class AuthResult(
     val currentUser: FirebaseUser? = null,
-    val isInitLoading: Boolean = true
+    val isInitLoading: Boolean = true,
+    val error: String? = null,
+    val success: String? = null,
 )
-
 class FirebaseAuthRepository @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val firebaseFirestore: FirebaseFirestore
@@ -22,39 +22,56 @@ class FirebaseAuthRepository @Inject constructor(
     val currentUser = _currentUser.asStateFlow()
 
     init {
-        firebaseAuth.addAuthStateListener {firebaseAuth ->
+        firebaseAuth.addAuthStateListener { firebaseAuth ->
+            val currentUser = firebaseAuth.currentUser
             _currentUser.value = AuthResult(
-                currentUser = firebaseAuth.currentUser,
+                currentUser = currentUser,
                 isInitLoading = false
-
             )
         }
     }
 
-    suspend fun signUp(email:String, password: String, userName: String){
-        val result = firebaseAuth.createUserWithEmailAndPassword(email,password).await()
-        result.user?.let{user->
-            val userData= hashMapOf(
-                "name" to userName,
-                "email" to email,
-                "password" to password
-            )
-            firebaseFirestore
-                .collection("users")
-                .document(user.uid)
-                .set(userData)
-                .await()
+    suspend fun signUp(email: String, password: String, userName: String): Boolean{
+
+        return try {
+            val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+            result.user?.let { user ->
+                val userData = hashMapOf(
+                    "name" to userName,
+                    "email" to email
+                )
+                firebaseFirestore
+                    .collection("users")
+                    .document(user.uid)
+                    .set(userData)
+                    .await()
+
+                _currentUser.value = AuthResult(currentUser = user)
+            }
+            true
+        } catch (e: Exception) {
+            // Atualiza o estado com erro
+            _currentUser.value = AuthResult(error = e.message)
+            false
         }
-        firebaseAuth.signOut()
     }
 
-    suspend fun signIn(email: String, password: String){
-        firebaseAuth.signInWithEmailAndPassword(email,password)
-            .await()
+
+
+    suspend fun signIn(email: String, password: String) {
+        try {
+            firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            val user = firebaseAuth.currentUser
+            _currentUser.value = AuthResult(currentUser = user)
+        } catch (e: Exception) {
+            // Se ocorrer um erro, atualize o estado com a mensagem de erro
+            _currentUser.value = AuthResult(error = e.message)
+        }
     }
 
-    fun signOut(){
+    fun signOut() {
         firebaseAuth.signOut()
+        _currentUser.value = AuthResult() // Resetar o estado após o logout
     }
 
     suspend fun getUserName(): String? {
@@ -75,5 +92,4 @@ class FirebaseAuthRepository @Inject constructor(
             Result.failure(e)
         }
     }
-
 }

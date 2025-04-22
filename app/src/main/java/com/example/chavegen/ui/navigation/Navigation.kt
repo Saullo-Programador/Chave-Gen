@@ -1,5 +1,11 @@
 package com.example.chavegen.ui.navigation
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,7 +47,13 @@ fun RootNavigationGraph(
     NavHost(
         navController = navController,
         route = AppGraph.initial.ROOT,
-        startDestination = AppGraph.initial.SPLASH
+        startDestination = AppGraph.initial.SPLASH,
+        enterTransition = { fadeIn(animationSpec = tween(
+            durationMillis = 1000,easing = FastOutSlowInEasing
+        )) },
+        exitTransition = { fadeOut(animationSpec = tween(
+            durationMillis = 1000, easing = FastOutSlowInEasing
+        )) },
     ) {
         composable(route = AppGraph.initial.SPLASH) {
             SplashScreen()
@@ -55,9 +67,14 @@ fun RootNavigationGraph(
 fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
     navigation(
         route = AppGraph.auth.ROOT,
-        startDestination = AppGraph.auth.SIGN_IN
+        startDestination = AppGraph.auth.SIGN_IN,
+
     ) {
-        composable(route = AppGraph.auth.SIGN_IN) {
+        composable(
+            route = AppGraph.auth.SIGN_IN,
+            enterTransition = { slideInHorizontally(initialOffsetX = { 2000 }) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { -2000 }) },
+        ) {
             val viewModel: SignInViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
             val isLoading by viewModel.isLoading.collectAsState()
@@ -78,7 +95,11 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
                 isLoading = isLoading
             )
         }
-        composable(route = AppGraph.auth.SIGN_UP) {
+        composable(
+            route = AppGraph.auth.SIGN_UP,
+            enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }) },
+        ) {
             val viewModel: SignUpViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
             val scope = rememberCoroutineScope()

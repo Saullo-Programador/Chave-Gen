@@ -45,8 +45,7 @@ class FirebaseAuthRepository @Inject constructor(
                     .document(user.uid)
                     .set(userData)
                     .await()
-
-                _currentUser.value = AuthResult(currentUser = user)
+                firebaseAuth.signOut()
             }
             true
         } catch (e: Exception) {

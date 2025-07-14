@@ -2,7 +2,7 @@
 O ChaveGen é um gerenciador de senhas moderno e seguro, criado com o objetivo de 
 facilitar o armazenamento e a geração de logins e senhas fortes, com foco total na segurança do usuário.
 
-##🛠️ Tecnologias e funcionalidades do app:
+## 🛠️ Tecnologias e funcionalidades do app:
 
 - Desenvolvido em Kotlin com Jetpack Compose
 - Autenticação de usuários com Firebase Auth
